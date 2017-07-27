@@ -16,6 +16,7 @@ For this assignment, you'l be creating a database of movie films (with reviews),
 * Reviewer
 * Review
 
+#### Key
 * `<...>` is a placeholder for actual data.
 * `S` = string, `D` = date, `N` = number, `I` = ObjectId
 * Properties marked with `R` are required.
