@@ -7,7 +7,7 @@ const Film = require('../../lib/models/film-model');
 
 const expectedValidation = () => { throw new Error('expected validation errors'); };
 
-describe.only('review model', () => {
+describe('review model', () => {
 
     it('validates good model', () => {
 
