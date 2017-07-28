@@ -4,15 +4,6 @@ const mongoose = require("../../lib/connect");
 
 describe("film model unit tests", () => {
 
-      // const seedFilm = new Film({
-      // title: 'Filmy McFilmface',
-      // studio: 'Studio Z',
-      // released:'2016',
-      // cast:{
-      //   role: 'leading lady',
-      //   actor:'Scarlett Johanssen'
-      // }});
-
   it("film has a title", () => {
     const myFilm = new Film({
       title: 'Filmy McFilmface',
