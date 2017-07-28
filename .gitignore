@@ -3,4 +3,3 @@ node_modules
 *.txt
 .vscode
 .eslintrc
-package.json
