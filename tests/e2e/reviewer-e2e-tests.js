@@ -2,8 +2,10 @@ const chai = require('chai');
 const assert = chai.assert;
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
+const Reviewer = require('../../lib/models/reviewer-model');
 
-process.env.MONGODB_URI = 'mongodb://localhost:27017/ripe-banana-reviewer-test';
+
+process.env.MONGODB_URI = 'mongodb://localhost:27017/ripe-banana';
 
 require('../../lib/connect');
 
@@ -40,8 +42,9 @@ describe.only('reviewer REST api', () => {
     it('saves a reviewer', () => {
         return saveReviewer(siskel)
             .then( savedReviewer => {
-                assert.isOk(savedReviewer._id);
-                assert.deepEqual(savedReviewer, siskel);
+                assert.ok(savedReviewer._id);
+                assert.equal(savedReviewer.name, siskel.name);
+                assert.equal(savedReviewer.company, siskel.company);
             });
     });
 });
