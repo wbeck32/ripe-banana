@@ -10,9 +10,7 @@ const expectedValidation = () => { throw new Error('expected validation errors')
 describe('review model', () => {
 
     it('validates good model', () => {
-        const pixar = new Studio({
-            name: 'Pixar'
-        })
+
         const siskel = new Reviewer({
             name: 'Siskel',
             company: 'filmflappers.net'
@@ -20,7 +18,6 @@ describe('review model', () => {
 
         const legionFilm = new Film({
             title: 'Legion',
-            studio: pixar._id
         });
 
         const legionReview = new Review({
@@ -33,4 +30,16 @@ describe('review model', () => {
         return legionReview.validate();
     });
 
+    it('throws an error on bad model', () => {
+        const review = new Review();
+
+        return review.validate()
+            .then( () => expectedValidation,
+            ({ errors }) => {
+                assert.ok(errors.rating);
+                assert.ok(errors.reviewer);
+                assert.ok(errors.review);
+                assert.ok(errors.film);
+            });
+    });
 });
