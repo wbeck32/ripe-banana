@@ -8,8 +8,9 @@
     "test:watch": "npm test -- -w",
     "test": "mocha tests --recursive --reporter mocha-better-spec-reporter",
     "wendy": "npm run test:watch:nodemon",
-    "start": "nodemon server.js"
-    },
+    "start": "nodemon server.js",
+    "test:unit": "mocha tests/unit"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wbeck32/ripe-banana.git"
