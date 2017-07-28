@@ -21,8 +21,8 @@ describe.only('reviewer model', () => {
             .then(
                 () => expectedValidation,
                 ({ errors })=> {
-                    assert.ok(errors.type);
-                    assert.ok(errors.weight);
+                    assert.ok(errors.company);
+                    assert.ok(errors.name);
                 }
             );
     });
