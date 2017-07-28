@@ -7,7 +7,7 @@ const Film = require('../../lib/models/film-model');
 
 const expectedValidation = () => { throw new Error('expected validation errors'); };
 
-describe.only('review model', () => {
+describe('review model', () => {
 
     it('validates good model', () => {
         const pixar = new Studio({
@@ -29,7 +29,7 @@ describe.only('review model', () => {
             review: 'Passable, but not great. I wouldn\'t bring my kids',
             film: legionFilm._id
         });
-        
+
         return legionReview.validate();
     });
 
