@@ -1,0 +1,19 @@
+{
+  "name": "ripe-banana",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wbeck32/ripe-banana.git"
+  },
+  "author": "Wendy Beck, Christy La Guardia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wbeck32/ripe-banana/issues"
+  },
+  "homepage": "https://github.com/wbeck32/ripe-banana#readme"
+}
