@@ -1,27 +1,51 @@
 const Film = require("../../lib/models/film-model");
+const Studio = require("../../lib/models/studio-model");
+const Actor = require("../../lib/models/actor-model");
 const { assert } = require("chai");
 const mongoose = require("../../lib/connect");
 
-describe("film model unit tests", () => {
+const expectedValidation = () => {
+  throw new Error("expected validation errors");
+};
 
-  it("film has a title", () => {
+describe("film model unit tests", () => {
+  it("film validates", () => {
+    const studio = new Studio({
+      name: "Studio Z"
+    });
+    const actor = new Actor({
+      name: "Scarlett Johanssen"
+    });
+
     const myFilm = new Film({
       title: "Filmy McFilmface",
-      studio: "Studio Z",
-      released:"2016",
-      cast:{
+      studio: studio._id,
+      released: "2016",
+      cast: {
         role: "leading lady",
-        actor:"Scarlett Johanssen"
-    }});
+        actor: actor._id
+      }
+    });
 
-    return myFilm
-    .validate()
-      .then(res => {
-assert.equal(res.text, 'Filmy McFilmface')  // assertions
-      })
-        .catch(() => {
-          // console.log(errors);
-        });
+    return myFilm.validate();
+  }),
 
-  }), it("film has a studio id", () => {}), it("film has at least one actor", () => {}), it("film is invalid", () => {});
+  it("film validation fails", () => {
+    const studio = new Studio({});
+    const actor = new Actor({
+      name: "Scarlett Johanssen"
+    });
+
+    const myFilm = new Film({
+      title: "Filmy McFilmface",
+      studio: studio._id,
+      released: "2016",
+      cast: {
+        role: "leading lady",
+        actor: actor._id
+      }
+    });
+
+    return myFilm.validate();
+  });
 });
