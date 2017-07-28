@@ -6,18 +6,18 @@ describe("film model unit tests", () => {
 
   it("film has a title", () => {
     const myFilm = new Film({
-      title: 'Filmy McFilmface',
-      studio: 'Studio Z',
-      released:'2016',
+      title: "Filmy McFilmface",
+      studio: "Studio Z",
+      released:"2016",
       cast:{
-        role: 'leading lady',
-        actor:'Scarlett Johanssen'
+        role: "leading lady",
+        actor:"Scarlett Johanssen"
     }});
 
     return myFilm
     .validate()
-      .then(() => {
-// assertions
+      .then(res => {
+assert.equal(res.text, 'Filmy McFilmface')  // assertions
       })
         .catch(() => {
           // console.log(errors);
