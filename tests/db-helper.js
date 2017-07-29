@@ -5,7 +5,8 @@ module.exports = {
     return connection.dropDatabase();
   },
   dropColl(name) {
-    const collection = connection.db.collection(name)
+    const collection = connection.db.collection(name);
+    console.log('collection: ', collection);
     if (collection) collection.drop();
   }
 };

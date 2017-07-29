@@ -15,7 +15,7 @@ const app = require('../../lib/app');
 
 const request = chai.request(app);
 
-describe.only('reviewer REST api', () => {
+describe('reviewer REST api', () => {
 
     before (() => connection.dropDatabase());
 

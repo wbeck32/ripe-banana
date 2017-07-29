@@ -11,7 +11,7 @@ const connection = require('mongoose').connection;
 const app = require('../../lib/app');
 const request = chai.request(app);
 
-describe.only('actor api', () => {
+describe('actor api', () => {
 
     beforeEach(() => connection.dropDatabase());
 
@@ -25,7 +25,7 @@ describe.only('actor api', () => {
             });
             // .then(res => JSON.parse(res.text));
     }
-    
+
     it('saves an actor', () => {
         let actor = {
             name: 'Jennifer Lawrence',
