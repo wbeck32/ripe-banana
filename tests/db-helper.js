@@ -6,7 +6,6 @@ module.exports = {
   },
   dropColl(name) {
     const collection = connection.db.collection(name);
-    console.log('collection: ', collection);
     if (collection) collection.drop();
   }
 };
