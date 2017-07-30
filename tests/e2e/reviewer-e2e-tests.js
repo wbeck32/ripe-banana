@@ -15,7 +15,7 @@ const app = require('../../lib/app');
 
 const request = chai.request(app);
 
-describe.only('reviewer REST api', () => {
+describe('reviewer REST api', () => {
 
     before (() => connection.dropDatabase());
 
@@ -39,7 +39,7 @@ describe.only('reviewer REST api', () => {
             });
     }
 
-    it('saves a reviewer', () => {
+    it.skip('saves a reviewer', () => {
         return saveReviewer(siskel)
             .then( savedReviewer => {
                 assert.ok(savedReviewer._id);
