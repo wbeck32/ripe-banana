@@ -55,4 +55,19 @@ describe.only('actor api', () => {
             });
     });
 
+    it('gets an actor by id', () => {
+        let actor = {
+            name: 'Bruce Lee',
+            dob: new Date(1940, 10, 27), //November 27, 1940
+            pob: 'San Francisco, CA'
+        };
+
+        return save(actor)
+            .then(saved => actor = saved)
+            .then(() => request.get(`/actors/${actor._id}`))
+            .then(res => {
+                assert.deepEqual(res.body, actor);
+            });
+    });
+
 });
