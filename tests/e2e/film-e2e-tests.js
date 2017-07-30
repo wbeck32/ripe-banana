@@ -1,6 +1,6 @@
 const app = require("../../lib/app");
 const chai = require("chai");
-const { assert } = chai.assert;
+const assert = chai.assert;
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
 
@@ -22,7 +22,12 @@ const Actor = require("../../lib/models/actor-model");
 describe.only("film e2e tests", () => {
   const req = chai.request(app);
   before(() => connection);
-  beforeEach(() => dbHelper.dropColl("film"));
+  beforeEach(() => {
+    let testStudio,
+      testActor,
+      testFilm = null;
+    dbHelper.dropColl("film");
+  });
 
   const testStudio = new Studio({
     name: "Studio Fantastico",
@@ -50,17 +55,17 @@ describe.only("film e2e tests", () => {
   });
 
   function save(testFilm) {
-    console.log("2: ", testFilm);
     return req.post("/films").send(testFilm).then(({ body }) => {
-      console.log("3: ");
-      return body;
+      testFilm._v = body._v;
+      testFilm._id = body._id;
+      return testFilm;
     });
   }
 
   it.only("POST /film", () => {
-    console.log("1");
     return save(testFilm).then(savedFilm => {
-      console.log("4: ", savedFilm);
+      assert.equal(testFilm.released, savedFilm.released);
+      assert.deepEqual(testFilm, savedFilm);
     });
   }), it("GET /films", () => {
     return req.get("/", () => {}).then(res => {}).catch(err => {});
