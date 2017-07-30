@@ -10,42 +10,42 @@ const expectedValidation = () => {
 
 describe("film model unit tests", () => {
   it("film validates", () => {
-    const studio = new Studio({
-      name: "Studio Z"
-    });
-    const actor = new Actor({
-      name: "Scarlett Johanssen"
-    });
+      const studio = new Studio({
+        name: "Studio Z"
+      });
+      const actor = new Actor({
+        name: "Scarlett Johanssen"
+      });
 
-    const myFilm = new Film({
-      title: "Filmy McFilmface",
-      studio: studio._id,
-      released: "2016",
-      cast: {
-        role: "leading lady",
-        actor: actor._id
-      }
+      const myFilm = new Film({
+        title: "Filmy McFilmface",
+        studio: studio._id,
+        released: "2016",
+        cast: {
+          role: "leading lady",
+          actor: actor._id
+        }
+      });
+
+      return myFilm.validate();
+    }),
+
+    it("film validation fails", () => {
+      const studio = new Studio({});
+      const actor = new Actor({
+        name: "Scarlett Johanssen"
+      });
+
+      const myFilm = new Film({
+        title: "Filmy McFilmface",
+        studio: studio._id,
+        released: "2016",
+        cast: {
+          role: "leading lady",
+          actor: actor._id
+        }
+      });
+
+      return myFilm.validate();
     });
-
-    return myFilm.validate();
-  }),
-
-  it("film validation fails", () => {
-    const studio = new Studio({});
-    const actor = new Actor({
-      name: "Scarlett Johanssen"
-    });
-
-    const myFilm = new Film({
-      title: "Filmy McFilmface",
-      studio: studio._id,
-      released: "2016",
-      cast: {
-        role: "leading lady",
-        actor: actor._id
-      }
-    });
-
-    return myFilm.validate();
-  });
 });
