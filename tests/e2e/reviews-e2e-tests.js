@@ -17,7 +17,7 @@ const app = require('../../lib/app');
 
 const request = chai.request(app);
 
-describe.only('reviews REST API', () => {
+describe('reviews REST API', () => {
 
     const testStudio = new Studio({
         name: 'Studio Fantastico',
@@ -188,14 +188,14 @@ describe.only('reviews REST API', () => {
             saveFilm(testFilm),
             saveFilm(testFilm2),
             saveReview(review2),
-            saveReview(review3),
-            saveReview(review4)
+            saveReview(review3)
         ])
+        .then( () => saveReview(review4) )
         .then(() => request.get('/reviews'))
         .then( res => {
             const reviews = res.body;
-            assert.equal(reviews.length, 4);
-            assert.equal(reviews[0].rating, 2);
+            assert.equal(reviews.length, 3);
+            assert.equal(reviews[0].rating, 4);
             assert.equal(reviews[2].film.title, 'The Greatest Film Ever');
             assert.equal(reviews[3].film.title, 'The Third Greatest Film Ever');
         });
