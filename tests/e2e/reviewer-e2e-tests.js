@@ -58,4 +58,14 @@ describe.only('reviewer REST api', () => {
                 assert.equal(reviewers[1]._id, ebert._id);
             });
     });
+
+    it('gets a reviewer by id', () => {
+        request.get(`/api/reviewers/${ebert._id}`)
+        .then( res => {
+            console.log(res);
+            assert.equal(res.body._id, ebert._id);
+            assert.equal(res.body.name, ebert.name);
+            assert.equal(res.body.company, ebert.company);
+        });
+    });
 });
