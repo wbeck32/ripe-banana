@@ -33,6 +33,12 @@ describe.only('reviews REST API', () => {
         dob: new Date('1987', '11', '11'),
         pob: 'Exeter, New Hampshire'
     });
+
+    const testActor2 = new Actor({
+        name: 'McCaully Culkin',
+        dob: new Date('1992', '03', '11'),
+        pob: 'Vale, CO'
+    });
     
     const testFilm = new Film({
         title: 'The Greatest Film Ever',
@@ -42,6 +48,19 @@ describe.only('reviews REST API', () => {
             role: 'Mayor of Mystery',
             actor: testActor._id
         }
+    });
+
+    const testFilm2 = new Film({
+        title: 'The Third Greatest Film Ever',
+        studio: testStudio._id,
+        released: 2007,
+        cast: [{
+            role: 'Mayor of Mystery',
+            actor: testActor._id
+        },{
+            role: 'Comptroller of Contempt',
+            actor: testActor2._id
+        }]
     });
 
     const siskel = new Reviewer({
@@ -100,6 +119,27 @@ describe.only('reviews REST API', () => {
         film: testFilm._id
     };
 
+    const review2 = {
+        rating: 5,
+        reviewer: siskel._id,
+        review: 'this movie was great!',
+        film: testFilm2._id
+    };
+
+    const review3 = {
+        rating: 1,
+        reviewer: ebert._id,
+        review: 'I wouldn\'t let my dog chew on the DVD',
+        film: testFilm._id
+    };
+
+    const review4 = {
+        rating: 4,
+        reviewer: ebert._id,
+        review: 'I\'d let my dog chew on the DVD',
+        film: testFilm2._id
+    };
+
     function saveReview(review) {
         return request.post('/reviews')
             .send(review)
@@ -117,7 +157,7 @@ describe.only('reviews REST API', () => {
             saveReviewer(siskel),
             saveReviewer(ebert),
             saveActor(testActor),
-            saveStudio(testStudio)            
+            saveStudio(testStudio)
         ]);
     });
 
@@ -141,4 +181,24 @@ describe.only('reviews REST API', () => {
                 assert.deepEqual( rxn, { modified: true });
             });
     });
+
+    it('returns a list of reviews', () =>{
+        return Promise.all([
+            saveActor(testActor2),
+            saveFilm(testFilm),
+            saveFilm(testFilm2),
+            saveReview(review2),
+            saveReview(review3),
+            saveReview(review4)
+        ])
+        .then(() => request.get('/reviews'))
+        .then( res => {
+            const reviews = res.body;
+            assert.equal(reviews.length, 4);
+            assert.equal(reviews[0].rating, 2);
+            assert.equal(reviews[2].film.title, 'The Greatest Film Ever');
+            assert.equal(reviews[3].film.title, 'The Third Greatest Film Ever');
+        });
+    });
+
 });
