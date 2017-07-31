@@ -160,43 +160,77 @@ describe.only('actor e2e tests', () => {
             });
     }
 
-
     before(() => {
-        saveStudio(studios.warner)
-            .then(saved => studios.warner = saved)
-            .then(Promise.all([
-                saveActor(actors.bruce),
-                saveActor(actors.nora),
-                saveActor(actors.paul)
-            ]))
-            .then(saveFilm(films.dragon1))
-            .then(saved => films.dragon1 = saved);
+        // let actorsList = Object.keys(actors).map((key) => actors[key]);
+
+        // QUESTION: probably a better way to do this.
+        // Promise.all([
+        //     saveActor(actors.bruce),
+        //     saveActor(actors.john),
+        //     saveActor(actors.jim),
+        //     saveActor(actors.nora),
+        //     saveActor(actors.riki),
+        //     saveActor(actors.robert),
+        //     saveActor(actors.paul)
+        // ])
+        //     // .then(saved => actors = saved);
+        //     .then(saved => saved.forEach(a => actors[a.name]._id = saved._id));
+
+            // console.log('saved actors >>>>>>', actors);
+
+        saveActor(actors.bruce).then(saved => actors.bruce = saved)
+            .then(saveActor(actors.john).then(saved => actors.john = saved))
+            .then(saveActor(actors.jim).then(saved => actors.jim = saved))
+            .then(saveActor(actors.nora).then(saved => actors.nora = saved))
+            .then(saveActor(actors.riki).then(saved => actors.riki = saved))
+            .then(saveActor(actors.robert).then(saved => actors.robert = saved))
+            .then(saveActor(actors.paul).then(saved => actors.paul = saved))
+
+
+            .then(saveStudio(studios.warner)).then(saved => studios.warner = saved)
+            .then(saveFilm(films.dragon2)).then(saved => films.dragon2 = saved)
+        
+            .then(saveStudio(studios.golden)).then(saved => studios.golden = saved)
+            .then(saveFilm(films.dragon1)).then(saved => films.dragon1 = saved)
+            .then(saveFilm(films.fury)).then(saved => films.fury = saved);
+
+            // console.log('actors>>>>>>>>', actors);
     });
     
     it('saves an actor', () => {
-        return saveActor(actors.jim)
+        let jackie = {
+            name: 'Jackie Chan',
+            dob: new Date(1954, 3, 7),
+            pob: 'Victoria Peak, Hong Kong'
+        };
+
+        return saveActor(jackie)
             .then(saved => {
-                saved = actors.jim;
                 assert.isOk(saved._id);
-                assert.equal(saved.name, actors.jim.name);
-                assert.equal(saved.dob, actors.jim.dob);
-                assert.equal(saved.pob, actors.jim.pob);
+                assert.equal(saved.name, jackie.name);
+                assert.equal(saved.dob, jackie.dob);
+                assert.equal(saved.pob, jackie.pob);
             });
 
     });
 
-    //TODO: this is not finished
-    it.skip('gets all actors with count of films', () => {
-        let actorList = [actors.bruce, actors.jim, actors.nora, actors.paul];
+    //TODO: don't know how to get count of films
+    it.only('gets all actors with count of films', () => {
+        // const actorsList = Object.keys(actors).map((key) => actors[key]);
+        // let actorsList = [actors.bruce, actors.paul, actors.nora, actors.jim];//.sort((a, b) => a._id > b._id ? 1: -1 );
+
+        // const actorsList = Object.keys(actors).map((key) => actors[key].name);
+        // console.log('ACTOR LIST >>>>>>>', actorsList);
+
 
         return request.get('/actors')
             .then(res => {
                 const found = res.body.sort((a, b) => a._id > b._id ? 1: -1 );
-                assert.deepEqual(found, actorList);
+                assert.deepEqual(found, actors);
             });
     });
 
-    //TODO: this is not finished
+    //TODO: don't know how to get their films
     //	{ name, dob, pob, films: [ name, released ] }
     it.skip('gets an actor by id with list of their films', () => {
         return request.get(`/actors/${actors.bruce._id}`)
