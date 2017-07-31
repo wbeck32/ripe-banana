@@ -39,7 +39,7 @@ describe('reviewer REST api', () => {
             });
     }
 
-    it.skip('saves a reviewer', () => {
+    it('saves a reviewer', () => {
         return saveReviewer(siskel)
             .then( savedReviewer => {
                 assert.ok(savedReviewer._id);

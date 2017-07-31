@@ -11,7 +11,7 @@ const connection = require('mongoose').connection;
 const app = require('../../lib/app');
 const request = chai.request(app);
 
-describe.only('actor e2e tests', () => {
+describe('actor e2e tests', () => {
 
     before(() => connection.dropDatabase());
 
@@ -215,7 +215,7 @@ describe.only('actor e2e tests', () => {
     });
 
     //TODO: don't know how to get count of films
-    it.only('gets all actors with count of films', () => {
+    it('gets all actors with count of films', () => {
         // const actorsList = Object.keys(actors).map((key) => actors[key]);
         // let actorsList = [actors.bruce, actors.paul, actors.nora, actors.jim];//.sort((a, b) => a._id > b._id ? 1: -1 );
 
