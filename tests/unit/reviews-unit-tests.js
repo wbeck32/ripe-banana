@@ -26,7 +26,7 @@ describe('review model', () => {
             review: 'Passable, but not great. I wouldn\'t bring my kids',
             film: legionFilm._id
         });
-        
+
         return legionReview.validate();
     });
 
