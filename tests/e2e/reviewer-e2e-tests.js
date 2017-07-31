@@ -47,4 +47,15 @@ describe.only('reviewer REST api', () => {
                 assert.equal(savedReviewer.company, siskel.company);
             });
     });
+
+    it('gets a list of reviewers', () => {
+        return saveReviewer(ebert)
+            .then(() => request.get('/api/reviewers'))
+            .then( res => {
+                const reviewers = res.body;
+                assert.equal(reviewers.length, 2);
+                assert.equal(reviewers[0]._id, siskel._id);
+                assert.equal(reviewers[1]._id, ebert._id);
+            });
+    });
 });
