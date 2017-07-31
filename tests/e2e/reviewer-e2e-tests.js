@@ -30,7 +30,7 @@ describe('reviewer REST api', () => {
     });
 
     function saveReviewer(reviewer) {
-        return request.post('/api/reviewers')
+        return request.post('/reviewers')
             .send(reviewer)
             .then(({ body }) => {
                 reviewer._id = body._id;
@@ -39,7 +39,7 @@ describe('reviewer REST api', () => {
             });
     }
 
-    it.skip('saves a reviewer', () => {
+    it('saves a reviewer', () => {
         return saveReviewer(siskel)
             .then( savedReviewer => {
                 assert.ok(savedReviewer._id);
@@ -50,7 +50,7 @@ describe('reviewer REST api', () => {
 
     it('gets a list of reviewers', () => {
         return saveReviewer(ebert)
-            .then(() => request.get('/api/reviewers'))
+            .then(() => request.get('/reviewers'))
             .then( res => {
                 const reviewers = res.body;
                 assert.equal(reviewers.length, 2);
@@ -60,7 +60,7 @@ describe('reviewer REST api', () => {
     });
 
     it('gets a reviewer by id', () => {
-        return request.get(`/api/reviewers/${ebert._id}`)
+        return request.get(`/reviewers/${ebert._id}`)
         .then( res => {
             let gotReviewer = res.body;
             assert.equal(gotReviewer._id, ebert._id);
@@ -70,7 +70,7 @@ describe('reviewer REST api', () => {
     });
 
     it('updates an existing reviewer', () => {
-        return request.put(`/api/reviewers/${ebert._id}`)
+        return request.put(`/reviewers/${ebert._id}`)
             .send({ company: 'Millions Makers'})
             .then( res => {
                 let rxn = res.body;
