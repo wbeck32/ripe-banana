@@ -17,7 +17,7 @@ const app = require('../../lib/app');
 
 const request = chai.request(app);
 
-describe.only('reviews REST api', () => {
+describe.only('reviews REST API', () => {
 
     const testStudio = new Studio({
         name: 'Studio Fantastico',
@@ -55,7 +55,7 @@ describe.only('reviews REST api', () => {
     });
 
     function saveReviewer(reviewer) {
-        return request.post('/api/reviewers')
+        return request.post('/reviewers')
             .send(reviewer)
             .then(({ body }) => {
                 reviewer._id = body._id;
@@ -64,7 +64,7 @@ describe.only('reviews REST api', () => {
             });
     }
     function saveActor(actor) {
-        return request.post('/api/actors')
+        return request.post('/actors')
             .send(actor)
             .then(({ body }) => {
                 actor._id = body._id;
@@ -74,7 +74,7 @@ describe.only('reviews REST api', () => {
     }
 
     function saveStudio(studio) {
-        return request.post('/api/studios')
+        return request.post('/studios')
             .send(studio)
             .then(({ body }) => {
                 studio._id = body._id;
@@ -84,7 +84,7 @@ describe.only('reviews REST api', () => {
     }
 
     function saveFilm(film) {
-        return request.post('/api/films')
+        return request.post('/films')
             .send(film)
             .then(({ body }) => {
                 film._id = body._id;
@@ -101,7 +101,7 @@ describe.only('reviews REST api', () => {
     };
 
     function saveReview(review) {
-        return request.post('/api/reviews')
+        return request.post('/reviews')
             .send(review)
             .then(({ body }) => {
                 review._id = body._id;
@@ -131,5 +131,14 @@ describe.only('reviews REST api', () => {
                 assert.equal(savedReview.review, 'this movie stinks');
             });
 
+    });
+
+    it('updates a review', () => {
+        return request.put('/reviews/:id')
+            .send( { review: 'this movie is ok' })
+            .then( res => {
+                let rxn = res.body;
+                assert.deepEqual( rxn, { modified: true });
+            });
     });
 });
