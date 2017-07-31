@@ -68,4 +68,12 @@ describe.only('reviewer REST api', () => {
             assert.equal(gotReviewer.company, ebert.company);
         });
     });
+
+    it('updates an existing reviewer', () => {
+        request.put(`/api/reviewers/${ebert._id}`)
+            .send({ company: 'Millions Makers'})
+            .then( res => {
+                assert.deepEqual( res.body, { modified: true });
+            });
+    });
 });
