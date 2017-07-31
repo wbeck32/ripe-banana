@@ -60,7 +60,7 @@ describe.only('reviewer REST api', () => {
     });
 
     it('gets a reviewer by id', () => {
-        request.get(`/api/reviewers/${ebert._id}`)
+        return request.get(`/api/reviewers/${ebert._id}`)
         .then( res => {
             let gotReviewer = res.body;
             assert.equal(gotReviewer._id, ebert._id);
@@ -70,10 +70,11 @@ describe.only('reviewer REST api', () => {
     });
 
     it('updates an existing reviewer', () => {
-        request.put(`/api/reviewers/${ebert._id}`)
+        return request.put(`/api/reviewers/${ebert._id}`)
             .send({ company: 'Millions Makers'})
             .then( res => {
-                assert.deepEqual( res.body, { modified: true });
+                let rxn = res.body;
+                assert.deepEqual( rxn, { modified: true });
             });
     });
 });
