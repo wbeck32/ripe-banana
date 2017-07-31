@@ -17,7 +17,7 @@ const app = require('../../lib/app');
 
 const request = chai.request(app);
 
-describe('reviews REST API', () => {
+describe.only('reviews REST API', () => {
 
     const testStudio = new Studio({
         name: 'Studio Fantastico',
@@ -157,13 +157,28 @@ describe('reviews REST API', () => {
             saveReviewer(siskel),
             saveReviewer(ebert),
             saveActor(testActor),
-            saveStudio(testStudio)
-        ]);
+            saveStudio(testStudio),
+            saveFilm(testFilm),
+            saveFilm(testFilm2),
+        ])
+            .then(() => {
+
+                for (let i = 0; i < 103; i++) {
+                    let review = {
+                        rating: Math.floor((Math.random() * 5) + 1),
+                        reviewer: i % 2 === 0 ? siskel._id : ebert._id,
+                        review: `I ${ i % 4 === 0 ? 'ate' : 'threw up'}  ${i} cheezbrgrs during this film`,
+                        film: i % 3 === 0 ? testFilm._id : testFilm2._id
+                    };
+                    saveReview(review);
+                }
+
+            });
     });
 
     it('saves a review', () => {
         return saveReview(review1)
-            .then( savedReview => {
+            .then(savedReview => {
                 assert.ok(savedReview._id);
                 assert.ok(savedReview.createdAt);
                 assert.ok(savedReview.updatedAt);
@@ -185,8 +200,6 @@ describe('reviews REST API', () => {
     it('returns a list of reviews', () =>{
         return Promise.all([
             saveActor(testActor2),
-            saveFilm(testFilm),
-            saveFilm(testFilm2),
             saveReview(review2),
             saveReview(review3)
         ])
@@ -194,10 +207,10 @@ describe('reviews REST API', () => {
         .then(() => request.get('/reviews'))
         .then( res => {
             const reviews = res.body;
-            assert.equal(reviews.length, 3);
+            assert.equal(reviews.length, 100);
             assert.equal(reviews[0].rating, 4);
-            assert.equal(reviews[2].film.title, 'The Greatest Film Ever');
-            assert.equal(reviews[3].film.title, 'The Third Greatest Film Ever');
+            assert.equal(reviews[0].film.title, 'The Third Greatest Film Ever');
+            assert.ok(reviews[45].rating);
         });
     });
 
