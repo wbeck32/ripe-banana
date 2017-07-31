@@ -207,15 +207,28 @@ describe.only('actor e2e tests', () => {
 
     it('removes an actor by id', () => {
         return saveActor(actors.robert)
-            .then(saved => actors.robert = saved)
-            .then(request.delete(`/actors/${actors.robert._id}`))
-            .then(res => {
-                assert.deepEqual(res.body, { removed: true });
+            .then(res => res.body = actors.robert)
+            .then(() => request.delete(`/actors/${actors.robert._id}`))
+            .then(res => res.body)
+            .then(result => {
+                assert.deepEqual(result, { removed: true });
             });
     });
 
-    // it('updates and actor by id', () => {
+    it('updates and actor by id', () => {
+        const changes = {
+            dob: new Date(1957, 6, 18),
+            pob: 'Hong Kong'
+        };
 
-    // });
+        return saveActor(actors.riki)
+            .then(res => res.body = actors.riki)
+            .then(() => request.patch(`/actors/${actors.riki._id}`).send(changes))
+            .then(result => {
+                assert.deepEqual(result.dob, actors.riki.dob);
+                assert.deepEqual(result.pob, actors.riki.pob);
+            });
+
+    });
 
 });
