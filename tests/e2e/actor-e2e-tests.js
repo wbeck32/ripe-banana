@@ -11,11 +11,15 @@ const connection = require('mongoose').connection;
 const app = require('../../lib/app');
 const request = chai.request(app);
 
+<<<<<<< HEAD
 const Studio = require('../../lib/models/studio-model');
 const Actor = require('../../lib/models/actor-model');
 const Film = require('../../lib/models/film-model');
 
 describe.only('actor e2e tests', () => {
+=======
+describe('actor e2e tests', () => {
+>>>>>>> 899a4d9a276e3ed211dd4fe54786653fa5b30bb3
 
     before(() => connection.dropDatabase());
 
