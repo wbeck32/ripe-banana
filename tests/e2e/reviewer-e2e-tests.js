@@ -62,10 +62,10 @@ describe.only('reviewer REST api', () => {
     it('gets a reviewer by id', () => {
         request.get(`/api/reviewers/${ebert._id}`)
         .then( res => {
-            console.log(res);
-            assert.equal(res.body._id, ebert._id);
-            assert.equal(res.body.name, ebert.name);
-            assert.equal(res.body.company, ebert.company);
+            let gotReviewer = res.body;
+            assert.equal(gotReviewer._id, ebert._id);
+            assert.equal(gotReviewer.name, ebert.name);
+            assert.equal(gotReviewer.company, ebert.company);
         });
     });
 });
