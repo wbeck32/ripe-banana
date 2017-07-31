@@ -2,7 +2,7 @@ const chai = require('chai');
 const assert = chai.assert;
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
-const Reviewer = require('../../lib/models/review-model');
+const Reviewer = require('../../lib/models/reviewer-model');
 const Film = require('../../lib/models/film-model');
 const Studio = require('../../lib/models/studio-model');
 const Actor = require('../../lib/models/actor-model');
@@ -134,7 +134,7 @@ describe.only('reviews REST API', () => {
     });
 
     it('updates a review', () => {
-        return request.put('/reviews/:id')
+        return request.put(`/reviews/${review1._id}`)
             .send( { review: 'this movie is ok' })
             .then( res => {
                 let rxn = res.body;
