@@ -11,63 +11,211 @@ const connection = require('mongoose').connection;
 const app = require('../../lib/app');
 const request = chai.request(app);
 
-describe('actor api', () => {
+describe.only('actor e2e tests', () => {
 
-    beforeEach(() => connection.dropDatabase());
+    before(() => connection.dropDatabase());
 
-    function save(actor) {
+    let studios = {
+        warner: {
+            name: 'Warner Bros. Entertainment Inc.',
+            address: {
+                city: 'Burbank',
+                state: 'California',
+                country: 'United States'
+            }
+        },
+        golden: {
+            name: 'Orange Sky Golden Harvest',
+            address: {
+                city: 'Kowloon',
+                state: 'Hong Kong',
+                country: 'China'
+            }
+        }
+    };
+
+    let actors = {
+        bruce: {
+            name: 'Bruce Lee',
+            dob: new Date(1940, 10, 27),
+            pob: 'San Francisco, California, U.S.'
+        },
+        john: {
+            name: 'John Saxon',
+            dob: new Date(1935, 7, 5),
+            pob: 'Brooklyn, New York City, New York, U.S.'
+        },
+        jim: {
+            name: 'Jim Kelly',
+            dob: new Date(1946, 4, 5),
+            pob: 'Millersburg, Kentucky, U.S.'
+        },
+        nora: {
+            name: 'Nora Miao',
+            dob: new Date(1952, 1, 8),
+            pob: 'Hong Kong'
+        },
+        riki: {
+            name: 'Riki Hashimoto'
+        },
+        robert: {
+            name: 'Robert Baker'
+        },
+        paul: {
+            name: 'Paul Wei',
+            dob: new Date(1929, 10, 29),
+            pob: 'Nanjing, China'
+        },
+    };
+
+    let films = {
+        dragon1: {
+            title: 'Way of the Dragon',
+            studio: studios.golden._id,
+            released: 1972,
+            cast: [
+                {
+                    role: 'Tang Lung',
+                    actor: actors.bruce._id
+                },{
+                    role: 'Chen Ching-hua',
+                    actor: actors.nora._id
+                },{
+                    role: 'Ho',
+                    actor: actors.paul._id
+                }
+            ]
+        },
+        dragon2: {
+            title: 'Enter the Dragon',
+            studio: studios.warner._id,
+            released: 1973,
+            cast: [
+                {
+                    role: 'Lee',
+                    actor: actors.bruce._id
+                },{
+                    role: 'Roper',
+                    actor: actors.john._id
+                },{
+                    role: 'Williams',
+                    actor: actors.jim._id
+                }
+            ]
+        },
+        fury: {
+            title: 'Fist of Fury',
+            studio: studios.golden._id,
+            released: 1972,
+            cast: [
+                {
+                    role: 'Chen Zhen',
+                    actor: actors.bruce._id
+                },{
+                    role: ' Yuan Li\'er',
+                    actor: actors.nora._id
+                },{
+                    role: 'Hiroshi Suzuki',
+                    actor: actors.riki._id
+                },{
+                    role: 'Petrov',
+                    actor: actors.robert._id
+                }
+            ] 
+        }
+    };
+
+    function saveStudio(studio) {
+        return request.post('/studios')
+            .send(studio)
+            .then(({ body }) => {
+                studio._id = body._id;
+                studio.__v = body.__v;
+                studio.address = body.address;
+                return body;
+            });
+    }
+
+    function saveActor(actor) {
         return request.post('/actors')
             .send(actor)
             .then(({ body }) => {
                 actor._id = body._id;
                 actor.__v = body.__v;
+                actor.dob = body.dob;
+                actor.pob = body.pob;
                 return body;
             });
-            // .then(res => JSON.parse(res.text));
     }
 
+    function saveFilm(film) {
+        return request.post('/films')
+            .send(film)
+            .then(({ body }) => {
+                film._id = body._id;
+                film.__v = body.__v;
+                // film.cast = body.cast;
+                // film.studio = body.studio;
+                return body;
+            });
+    }
+
+
+    before(() => {
+        saveStudio(studios.warner)
+            .then(saved => studios.warner = saved)
+            .then(Promise.all([
+                saveActor(actors.bruce),
+                saveActor(actors.nora),
+                saveActor(actors.paul)
+            ]))
+            .then(saveFilm(films.dragon1))
+            .then(saved => films.dragon1 = saved);
+    });
+    
     it('saves an actor', () => {
-        let actor = {
-            name: 'Jennifer Lawrence',
-            dob: new Date(1990, 7, 15),
-            pob: 'Indian Hills, Kentucky'
-        };
-
-        return save(actor)
+        return saveActor(actors.jim)
             .then(saved => {
-                // assert.isOk(res.body._id);
-                assert.equal(saved.name, actor.name);
-                // assert.equal(saved.dob, actor.dob); //check out chai-datetime
-                assert.equal(saved.pob, actor.pob);
+                saved = actors.jim;
+                assert.isOk(saved._id);
+                assert.equal(saved.name, actors.jim.name);
+                assert.equal(saved.dob, actors.jim.dob);
+                assert.equal(saved.pob, actors.jim.pob);
             });
 
     });
 
-    it('gets all actors', () => {
-        let actors = [{ name: 'Chuck Norris' }, { name: 'Steven Seagal' }];
+    //TODO: this is not finished
+    it.skip('gets all actors with count of films', () => {
+        let actorList = [actors.bruce, actors.jim, actors.nora, actors.paul];
 
-        return Promise.all(actors.map(save))
-            .then(saved => actors = saved)
-            .then(() => request.get('/actors'))
+        return request.get('/actors')
             .then(res => {
-                // const saved = res.body.sort((a, b) => a._id > b._id ? 1 : -1 );
-                assert.deepEqual(res.body, actors);
+                const found = res.body.sort((a, b) => a._id > b._id ? 1: -1 );
+                assert.deepEqual(found, actorList);
             });
     });
 
-    it('gets an actor by id', () => {
-        let actor = {
-            name: 'Bruce Lee',
-            dob: new Date(1940, 10, 27), //November 27, 1940
-            pob: 'San Francisco, CA'
-        };
-
-        return save(actor)
-            .then(saved => actor = saved)
-            .then(() => request.get(`/actors/${actor._id}`))
+    //TODO: this is not finished
+    //	{ name, dob, pob, films: [ name, released ] }
+    it.skip('gets an actor by id with list of their films', () => {
+        return request.get(`/actors/${actors.bruce._id}`)
             .then(res => {
-                assert.deepEqual(res.body, actor);
+                assert.deepEqual(res.body, actors.bruce);
             });
     });
+
+    it('removes an actor by id', () => {
+        return saveActor(actors.robert)
+            .then(saved => actors.robert = saved)
+            .then(request.delete(`/actors/${actors.robert._id}`))
+            .then(res => {
+                assert.deepEqual(res.body, { removed: true });
+            });
+    });
+
+    // it('updates and actor by id', () => {
+
+    // });
 
 });
