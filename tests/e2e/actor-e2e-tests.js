@@ -168,16 +168,28 @@ describe('actor e2e tests', () => {
             });
     });
 
-    it('gets all actors with count of films', () => {
+    it.skip('gets all actors with count of films', () => {
 
-    //TODO: get count of films
+        const actorsResponse = [
+            { name: 'Bruce Lee', movieCount: 3 },
+            { name: 'John Saxon', movieCount: 1 },
+            { name: 'Jim Kelly', movieCount: 1 },
+            { name: 'Nora Miao', movieCount: 2 },
+            { name: 'Riki Hashimoto', movieCount: 1 },
+            { name: 'Robert Baker', movieCount: 1 },
+            { name: 'Paul Wei', movieCount: 1 }
+        ];
+        
+        //TODO: get count of films
+
         return request.get('/actors')
             .then(res => {
-                assert.equal(res.body.length, 8);
+                console.log(res.body);
+                assert.deepEqual(res.body, actorsResponse);
             });
     });
 
-    it.skip('gets an actor by id with list of their films', () => {
+    it('gets an actor by id with list of their films', () => {
         return request.get(`/actors/${bruce._id}`)
             .then(res => {
                 assert.equal(res.body.name, bruce.name);
@@ -187,7 +199,7 @@ describe('actor e2e tests', () => {
             });
     });
 
-    it('removes an actor by id', () => {
+    it('removes an actor that is NOT in a film', () => {
         let chuck = { name: 'Chuck Norris' };
 
         return saveActor(chuck)
@@ -196,6 +208,14 @@ describe('actor e2e tests', () => {
             .then(res => res.body)
             .then(result => {
                 assert.deepEqual(result, { removed: true });
+            });
+    });
+
+    it('does NOT remove an actor that is in a film', () => {
+        return request.delete(`/actors/${bruce._id}`)
+            .then(res => res.body)
+            .then(result => {
+                assert.deepEqual(result, { removed: false });
             });
     });
 
