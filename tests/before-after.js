@@ -6,6 +6,13 @@ chai.use(chaiHttp);
 const request = chai.request(app);
 
 module.exports = {
+
+    actor: {
+        name: 'Noodly McNoodleface',
+        dob: new Date('1987', '11', '11'),
+        pob: 'Exeter, New Hampshire'
+    },
+
     studio: {
         name: 'Studio Fantastico',
         address: {
@@ -15,63 +22,79 @@ module.exports = {
         }
     },
 
-    saveStudio(studio) {
-        console.log('saveStudio: ', studio);
+    review: {
+        rating: 5,
+        reviewer: null,
+        review: "I love a parade!",
+        film: null
+    },
+
+    reviewer: {
+        name: 'Mr. Crankypants',
+        company: 'New York Times'
+    },
+
+    film: {
+        title: 'The Greatest Film Ever',
+        studio: null,
+        released: 1997,
+        cast: [{
+            actor: null,
+            role: "Mayor of Magnificence"
+        }]
+    },
+
+    saveStudio(testStudio) {
+        // console.log('saveStudio: ', testStudio);
         return request.post('/studios')
-            .send(studio)
+            .send(testStudio)
             .then(({ body }) => {
-                return Promise((resolve, reject) => {
-                    studio._id = body._id;
-                    studio.__v = body.__v;
-                    return body;
-                })
+                testStudio._id = body._id;
+                testStudio.__v = body.__v;
+                return testStudio;
             })
     },
-
-    saveReviewer(reviewer) {
-        console.log('reviewer: ', reviewer);
-        return request.post('/reviewers')
-            .send(reviewer)
-            .then(({ body }) => {
-                reviewer._id = body._id;
-                reviewer.__v = body.__v;
-                return body;
-            });
-    },
-
-    saveReview(review) {
-        console.log('review: ', review);
-        return request.post('/reviews')
-            .send(review)
-            .then(({ body }) => {
-                review._id = body._id;
-                review.__v = body.__v;
-                return body;
-            });
-    },
-
-    saveActor(actor) {
-        console.log('actor: ', actor)
+    saveActor(testActor) {
+        // console.log('saveActor: ', testActor)
         return request.post('/actors')
-            .send(actor)
+            .send(testActor)
             .then(({ body }) => {
-                actor._id = body._id;
-                actor.__v = body.__v;
-                return body;
+                testActor._id = body._id;
+                testActor.__v = body.__v;
+                return testActor;
+            });
+    },
+    saveFilm(testFilm) {
+        // console.log('saveFilm: ', testFilm)
+        return request.post('/films')
+            .send(testFilm)
+            .then(({ body }) => {
+                testFilm._id = body._id;
+                testFilm.__v = body.__v;
+                return testFilm;
             });
     },
 
-    saveFilm(film) {
-        console.log('film: ', film)
-        return request.post('/films')
-            .send(film)
+    saveReviewer(testReviewer) {
+        // console.log('saveReviewer: ', testReviewer);
+        return request.post('/reviewers')
+            .send(testReviewer)
             .then(({ body }) => {
-                film._id = body._id;
-                film.__v = body.__v;
-                film.cast = body.cast;
-                film.studio = body.studio;
-                film.reviews = body.reviews;
-                return body;
+                testReviewer._id = body._id;
+                testReviewer.__v = body.__v;
+                return testReviewer;
+            });
+    },
+
+    saveReview(testReview) {
+        // console.log('saveReview: ', testReview);
+        return request.post('/reviews')
+            .send(testReview)
+            .then(({ body }) => {
+                testReview._id = body._id;
+                testReview.__v = body.__v;
+                return testReview;
             });
     }
+
 }
