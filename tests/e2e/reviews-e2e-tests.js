@@ -2,10 +2,6 @@ const chai = require('chai');
 const assert = chai.assert;
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
-const Reviewer = require('../../lib/models/reviewer-model');
-const Film = require('../../lib/models/film-model');
-const Studio = require('../../lib/models/studio-model');
-const Actor = require('../../lib/models/actor-model');
 
 process.env.MONGODB_URI = 'mongodb://localhost:27017/ripe-banana';
 
@@ -17,61 +13,67 @@ const app = require('../../lib/app');
 
 const request = chai.request(app);
 
-describe.only('reviews REST API', () => {
+describe('reviews REST API', () => {
 
-    const testStudio = new Studio({
+    const testStudio = {
         name: 'Studio Fantastico',
         address: {
             city: 'Krakow',
             state: '',
             country: 'Poland'
         }
-    });
+    };
 
-    const testActor = new Actor({
+    const testActor = {
         name: 'Noodly McNoodleface',
         dob: new Date('1987', '11', '11'),
         pob: 'Exeter, New Hampshire'
-    });
+    };
 
-    const testActor2 = new Actor({
+    const testActor2 = {
         name: 'McCaully Culkin',
         dob: new Date('1992', '03', '11'),
         pob: 'Vale, CO'
-    });
+    };
     
-    const testFilm = new Film({
+    let testFilm = {
         title: 'The Greatest Film Ever',
-        studio: testStudio._id,
+        studio: null,
         released: 1997,
-        cast: {
+        cast: [{
             role: 'Mayor of Mystery',
-            actor: testActor._id
-        }
-    });
+            actor: null
+        }]
+    };
 
-    const testFilm2 = new Film({
+    let testFilm2 = {
         title: 'The Third Greatest Film Ever',
-        studio: testStudio._id,
+        studio: null,
         released: 2007,
         cast: [{
             role: 'Mayor of Mystery',
-            actor: testActor._id
+            actor: null
         },{
             role: 'Comptroller of Contempt',
-            actor: testActor2._id
+            actor: null
         }]
-    });
+    };
 
-    const siskel = new Reviewer({
+    const siskel = {
         name: 'Siskel',
         company: 'filmflappers.net'
-    });
+    };
 
-    const ebert = new Reviewer({
+    const ebert = {
         name: 'Ebert',
         company: 'cinemanima.world'
-    });
+    };
+
+    let review1;
+    let review2;
+    let review3;
+    let review4;
+
 
     function saveReviewer(reviewer) {
         return request.post('/reviewers')
@@ -112,34 +114,6 @@ describe.only('reviews REST API', () => {
             });
     }
 
-    const review1 = {
-        rating: 2,
-        reviewer: siskel._id,
-        review: 'this movie stinks',
-        film: testFilm._id
-    };
-
-    const review2 = {
-        rating: 5,
-        reviewer: siskel._id,
-        review: 'this movie was great!',
-        film: testFilm2._id
-    };
-
-    const review3 = {
-        rating: 1,
-        reviewer: ebert._id,
-        review: 'I wouldn\'t let my dog chew on the DVD',
-        film: testFilm._id
-    };
-
-    const review4 = {
-        rating: 4,
-        reviewer: ebert._id,
-        review: 'I\'d let my dog chew on the DVD',
-        film: testFilm2._id
-    };
-
     function saveReview(review) {
         return request.post('/reviews')
             .send(review)
@@ -151,16 +125,27 @@ describe.only('reviews REST API', () => {
     }
 
     before ( () => {
-        connection.dropDatabase();
-    
-        Promise.all([
-            saveReviewer(siskel),
-            saveReviewer(ebert),
-            saveActor(testActor),
-            saveStudio(testStudio),
-            saveFilm(testFilm),
-            saveFilm(testFilm2),
-        ])
+        return connection.dropDatabase()
+            .then( () => {
+                return Promise.all([
+                    saveReviewer(siskel),
+                    saveReviewer(ebert),
+                    saveActor(testActor),
+                    saveActor(testActor2),
+                    saveStudio(testStudio)
+                ])
+                .then( savedStuff => {
+                    testFilm.studio = savedStuff[4]._id;
+                    testFilm.cast[0].actor = savedStuff[2]._id;
+                    testFilm2.studio = savedStuff[4]._id;
+                    testFilm2.cast[0].actor = savedStuff[2]._id;
+                    testFilm2.cast[1].actor = savedStuff[3]._id;
+                    return Promise.all([
+                        saveFilm(testFilm),
+                        saveFilm(testFilm2)
+                    ]);
+                });
+            })
             .then(() => {
 
                 for (let i = 0; i < 103; i++) {
@@ -173,6 +158,34 @@ describe.only('reviews REST API', () => {
                     saveReview(review);
                 }
 
+
+                review1 = {
+                    rating: 2,
+                    reviewer: siskel._id,
+                    review: 'this movie stinks',
+                    film: testFilm._id
+                };
+
+                review2 = {
+                    rating: 5,
+                    reviewer: siskel._id,
+                    review: 'this movie was great!',
+                    film: testFilm2._id
+                };
+
+                review3 = {
+                    rating: 1,
+                    reviewer: ebert._id,
+                    review: 'I wouldn\'t let my dog chew on the DVD',
+                    film: testFilm._id
+                };
+
+                review4 = {
+                    rating: 4,
+                    review: 'I\'d let my dog chew on the DVD',
+                    reviewer: ebert._id,
+                    film: testFilm2._id
+                };
             });
     });
 
@@ -199,7 +212,6 @@ describe.only('reviews REST API', () => {
 
     it('returns a list of reviews', () =>{
         return Promise.all([
-            saveActor(testActor2),
             saveReview(review2),
             saveReview(review3)
         ])

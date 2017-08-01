@@ -2,8 +2,6 @@ const chai = require('chai');
 const assert = chai.assert;
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
-const Reviewer = require('../../lib/models/reviewer-model');
-
 
 process.env.MONGODB_URI = 'mongodb://localhost:27017/ripe-banana';
 
@@ -19,15 +17,15 @@ describe('reviewer REST api', () => {
 
     before (() => connection.dropDatabase());
 
-    const siskel = new Reviewer({
+    const siskel = {
         name: 'Siskel',
         company: 'filmflappers.net'
-    });
+    };
 
-    const ebert = new Reviewer({
+    const ebert = {
         name: 'Ebert',
         company: 'cinemanima.world'
-    });
+    };
 
     function saveReviewer(reviewer) {
         return request.post('/reviewers')
@@ -61,6 +59,7 @@ describe('reviewer REST api', () => {
 
     it('gets a reviewer by id', () => {
         return request.get(`/reviewers/${ebert._id}`)
+        
         .then( res => {
             let gotReviewer = res.body;
             assert.equal(gotReviewer._id, ebert._id);
