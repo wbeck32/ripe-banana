@@ -15,7 +15,7 @@ const Studio = require('../../lib/models/studio-model');
 const Actor = require('../../lib/models/actor-model');
 const Film = require('../../lib/models/film-model');
 
-describe.only('actor e2e tests', () => {
+describe('actor e2e tests', () => {
 
     before(() => connection.dropDatabase());
 
