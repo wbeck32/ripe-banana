@@ -8,57 +8,61 @@ const Studio = require('../../lib/models/studio-model');
 const Actor = require('../../lib/models/actor-model');
 const Reviewer = require('../../lib/models/reviewer-model');
 const Review = require('../../lib/models/review-model');
+const saves = require('../before-after');
 
 process.env.MONGODB_URI = 'mongodb://localhost:27017/ripe-banana-test';
 require('../../lib/connect');
 const connection = require('mongoose')
     .connection;
 
-describe.skip('film e2e tests', () => {
+describe('film e2e tests', () => {
     const req = chai.request(app);
     before(() => connection);
     beforeEach(() => connection.dropDatabase());
 
-    const testStudio = new Studio({
+
+    const testStudio = {
         name: 'Studio Fantastico',
         address: {
             city: 'Krakow',
             state: '',
             country: 'Poland'
         }
-    });
-    const testActorA = new Actor({
+    }
+    saves.saveStudio(testStudio);
+
+    const testActorA = {
         name: 'Noodly McNoodleface',
         dob: new Date('1987', '11', '11'),
         pob: 'Exeter, New Hampshire'
-    });
-    const testActorB = new Actor({
+    };
+    const testActorB = {
         name: 'The Amazing Harold',
         dob: new Date('1987', '12', '12'),
         pob: 'Colorado Springs, CO'
-    });
+    };
 
     let testCast = [testActorA, testActorB];
 
-    let testFilm = new Film({
+    let testFilm = {
         title: 'The Greatest Film Ever',
         studio: testStudio._id,
         released: 1997,
         cast: testCast,
         reviews: []
-    });
+    };
 
-    const testReviewer = new Reviewer({
+    const testReviewer = {
         name: 'Mr. Crankypants',
         company: 'New York Times'
-    });
+    };
 
-    const testReview = new Review({
+    const testReview = {
         rating: 5,
         reviewer: testReviewer,
         review: "I love a parade!",
         film: testFilm._id
-    });
+    };
     testFilm.reviews = testReview;
 
     let testFilmA = {
