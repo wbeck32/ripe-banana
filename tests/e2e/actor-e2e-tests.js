@@ -13,60 +13,32 @@ const request = chai.request(app);
 
 describe.skip('actor e2e tests', () => {
 
+
     before(() => connection.dropDatabase());
 
-    let studios = {
-        warner: {
-            name: 'Warner Bros. Entertainment Inc.',
-            address: {
-                city: 'Burbank',
-                state: 'California',
-                country: 'United States'
-            }
-        },
-        golden: {
-            name: 'Orange Sky Golden Harvest',
-            address: {
-                city: 'Kowloon',
-                state: 'Hong Kong',
-                country: 'China'
-            }
+    let warner = new Studio ({
+        name: 'Warner Bros. Entertainment Inc.',
+        address: {
+            city: 'Burbank',
+            state: 'California',
+            country: 'United States'
         }
-    };
+    });
 
-    let actors = {
-        bruce: {
-            name: 'Bruce Lee',
-            dob: new Date(1940, 10, 27),
-            pob: 'San Francisco, California, U.S.'
-        },
-        john: {
-            name: 'John Saxon',
-            dob: new Date(1935, 7, 5),
-            pob: 'Brooklyn, New York City, New York, U.S.'
-        },
-        jim: {
-            name: 'Jim Kelly',
-            dob: new Date(1946, 4, 5),
-            pob: 'Millersburg, Kentucky, U.S.'
-        },
-        nora: {
-            name: 'Nora Miao',
-            dob: new Date(1952, 1, 8),
-            pob: 'Hong Kong'
-        },
-        riki: {
-            name: 'Riki Hashimoto'
-        },
-        robert: {
-            name: 'Robert Baker'
-        },
-        paul: {
-            name: 'Paul Wei',
-            dob: new Date(1929, 10, 29),
-            pob: 'Nanjing, China'
-        },
-    };
+    let golden = new Studio ({
+        name: 'Orange Sky Golden Harvest',
+        address: {
+            city: 'Kowloon',
+            state: 'Hong Kong',
+            country: 'China'
+        }
+    });
+
+    let bruce = new Actor ({
+        name: 'Bruce Lee',
+        dob: new Date(1940, 10, 27),
+        pob: 'San Francisco, California, U.S.'
+    });
 
     let films = {
         dragon1: {
@@ -125,6 +97,7 @@ describe.skip('actor e2e tests', () => {
         }
     };
 
+
     function saveStudio(studio) {
         return request.post('/studios')
             .send(studio)
@@ -154,29 +127,20 @@ describe.skip('actor e2e tests', () => {
             .then(({ body }) => {
                 film._id = body._id;
                 film.__v = body.__v;
-                // film.cast = body.cast;
-                // film.studio = body.studio;
+                film.cast = body.cast;
+                film.studio = body.studio;
                 return body;
             });
     }
 
     before(() => {
-        // let actorsList = Object.keys(actors).map((key) => actors[key]);
-
-        // QUESTION: probably a better way to do this.
-        // Promise.all([
-        //     saveActor(actors.bruce),
-        //     saveActor(actors.john),
-        //     saveActor(actors.jim),
-        //     saveActor(actors.nora),
-        //     saveActor(actors.riki),
-        //     saveActor(actors.robert),
-        //     saveActor(actors.paul)
-        // ])
-        //     // .then(saved => actors = saved);
-        //     .then(saved => saved.forEach(a => actors[a.name]._id = saved._id));
-
-            // console.log('saved actors >>>>>>', actors);
+        let actorsList = [bruce, john, jim, nora, riki, robert, paul];
+        Promise.all(actorsList.map(saveActor))
+            .then(saveStudio(warner))
+            .then(saveFilm(dragon2))
+            .then(saveStudio(golden))
+            .then(saveFilm(dragon1))
+            .then(saveFilm(fury));
 
         saveActor(actors.bruce).then(saved => actors.bruce = saved)
             .then(saveActor(actors.john).then(saved => actors.john = saved))
@@ -195,6 +159,7 @@ describe.skip('actor e2e tests', () => {
             .then(saveFilm(films.fury)).then(saved => films.fury = saved);
 
             // console.log('actors>>>>>>>>', actors);
+
     });
 
     it('saves an actor', () => {
@@ -211,56 +176,57 @@ describe.skip('actor e2e tests', () => {
                 assert.equal(saved.dob, jackie.dob);
                 assert.equal(saved.pob, jackie.pob);
             });
-
     });
 
-    //TODO: don't know how to get count of films
-    it.only('gets all actors with count of films', () => {
-        // const actorsList = Object.keys(actors).map((key) => actors[key]);
-        // let actorsList = [actors.bruce, actors.paul, actors.nora, actors.jim];//.sort((a, b) => a._id > b._id ? 1: -1 );
+    it('gets all actors with count of films', () => {
 
-        // const actorsList = Object.keys(actors).map((key) => actors[key].name);
-        // console.log('ACTOR LIST >>>>>>>', actorsList);
-
-
+    //TODO: get count of films
         return request.get('/actors')
             .then(res => {
-                const found = res.body.sort((a, b) => a._id > b._id ? 1: -1 );
-                assert.deepEqual(found, actors);
+                assert.equal(res.body.length, 8);
             });
     });
 
-    //TODO: don't know how to get their films
-    //	{ name, dob, pob, films: [ name, released ] }
     it.skip('gets an actor by id with list of their films', () => {
-        return request.get(`/actors/${actors.bruce._id}`)
+        return request.get(`/actors/${bruce._id}`)
             .then(res => {
-                assert.deepEqual(res.body, actors.bruce);
+                assert.equal(res.body.name, bruce.name);
+                // assert.equal(res.body.dob, bruce.dob); //QUESTION: why can't I compare dates?
+                assert.equal(res.body.pob, bruce.pob);
+                assert.equal(res.body.films.length, 3);
             });
     });
 
     it('removes an actor by id', () => {
-        return saveActor(actors.robert)
-            .then(res => res.body = actors.robert)
-            .then(() => request.delete(`/actors/${actors.robert._id}`))
+        let chuck = { name: 'Chuck Norris' };
+
+        return saveActor(chuck)
+            .then(res => res.body = chuck)
+            .then(() => request.delete(`/actors/${chuck._id}`))
             .then(res => res.body)
             .then(result => {
                 assert.deepEqual(result, { removed: true });
             });
     });
 
-    it('updates and actor by id', () => {
-        const changes = {
+    it('updates an actor by id', () => {
+        let steven = new Actor ({
+            name: 'Steven Seagal',
             dob: new Date(1957, 6, 18),
             pob: 'Hong Kong'
+        });
+
+        const changes = {
+            dob: new Date(1952, 3, 10),
+            pob: 'Lansing, Michigan'
         };
 
-        return saveActor(actors.riki)
-            .then(res => res.body = actors.riki)
-            .then(() => request.patch(`/actors/${actors.riki._id}`).send(changes))
-            .then(result => {
-                assert.deepEqual(result.dob, actors.riki.dob);
-                assert.deepEqual(result.pob, actors.riki.pob);
+        return saveActor(steven)
+            .then(res => res.body = steven)
+            .then(() => request.patch(`/actors/${steven._id}`).send(changes))
+            .then(res => {
+                assert.deepEqual(new Date(res.body.dob), changes.dob);
+                assert.deepEqual(res.body.pob, changes.pob);
             });
 
     });
