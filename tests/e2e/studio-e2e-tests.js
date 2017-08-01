@@ -13,7 +13,7 @@ const app = require('../../lib/app');
 
 const request = chai.request(app);
 
-describe.only('studio REST api', () => {
+describe('studio REST api', () => {
 
 
     const testStudio = {
