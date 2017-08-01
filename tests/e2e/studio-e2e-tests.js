@@ -45,6 +45,16 @@ describe.only('studio REST api', () => {
             });
     });
 
+    it('gets a studio by id', () => {
+        return request.get(`/studios/${testStudio._id}`)
+            .then( res => {
+                let gotStudio = res.body;
+                assert.equal(gotStudio._id, testStudio._id);
+                assert.equal(gotStudio.name, testStudio.name);
+                assert.deepEqual(gotStudio.address, testStudio.address);
+            });
+    });
+
     it('updates a studio', () => {
         return request.put(`/studios/${testStudio._id}`)
             .send({ name: 'Ocukys Pictures' })
