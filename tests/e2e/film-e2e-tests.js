@@ -20,27 +20,42 @@ describe('film e2e tests', () => {
     before(() => connection);
     beforeEach(() => connection.dropDatabase());
 
-
-    const testStudio = {
+   testStudio : ({
         name: 'Studio Fantastico',
         address: {
             city: 'Krakow',
             state: '',
             country: 'Poland'
         }
-    }
-    saves.saveStudio(testStudio);
+    }),
+
+//    saves.saveStudio(testStudio);
+
+    // let k = newStudio();
+
+    // function newStudio() {
+    //     return saves.saveStudio(saves.studio)
+    //         .then(saved, () => {
+    //             console.log('s: ', saved);
+    //             return saved;
+    //         })
+
+    // }
 
     const testActorA = {
         name: 'Noodly McNoodleface',
         dob: new Date('1987', '11', '11'),
         pob: 'Exeter, New Hampshire'
     };
+
     const testActorB = {
         name: 'The Amazing Harold',
         dob: new Date('1987', '12', '12'),
         pob: 'Colorado Springs, CO'
     };
+
+    saves.saveActor(testActorA);
+    saves.saveActor(testActorB);
 
     let testCast = [testActorA, testActorB];
 
@@ -51,11 +66,14 @@ describe('film e2e tests', () => {
         cast: testCast,
         reviews: []
     };
+    saves.saveFilm(testFilm);
 
     const testReviewer = {
         name: 'Mr. Crankypants',
         company: 'New York Times'
     };
+
+    saves.saveReviewer(testReviewer);
 
     const testReview = {
         rating: 5,
@@ -63,6 +81,7 @@ describe('film e2e tests', () => {
         review: "I love a parade!",
         film: testFilm._id
     };
+    saves.saveReview(testReview);
     testFilm.reviews = testReview;
 
     let testFilmA = {
@@ -100,9 +119,14 @@ describe('film e2e tests', () => {
     testFilmB.reviews = testReview;
     testFilmC.reviews = testReview;
 
-    let testFilms = [ testFilmA,testFilmB,testFilmC];
+    let testFilms = [testFilmA, testFilmB, testFilmC];
 
     function save(testFilm) {
+        saveFilm(testFilm)
+            .then(film => {
+                testFilm = film
+                return testFilm;
+            })
         // console.log('2: ', testFilm);
         return req.post('/films')
             .send(testFilm)
@@ -118,21 +142,21 @@ describe('film e2e tests', () => {
             });
     }
 
-    it('POST /film', () => {
-        return save(testFilm)
-            .then(savedFilm => {
-                console.log('2.75: ', savedFilm);
-                assert.equal(testFilm.released, savedFilm.released);
-                assert.deepEqual(testFilm, savedFilm);
-            });
-    }), it.only('GET /films', () => {
+    it.only('POST /film', () => {
+        // return save(testFilm)
+        //     .then(savedFilm => {
+        //         console.log('2.75: ', savedFilm);
+        //         assert.equal(testFilm.released, savedFilm.released);
+        //         assert.deepEqual(testFilm, savedFilm);
+        //     });
+    }), it('GET /films', () => {
         // TODO: don't create consts as objects
         console.log('1: ', testFilms);
         // let filmName = Object.entries(testFilms)
         //     .map(function(film) {
         //         return film[1][Object.getOwnPropertyNames(film[1])];
         //     });
-        return Promise.all(testFilms.forEach(film,() => {
+        return Promise.all(testFilms.forEach(film, () => {
                 console.log('in save film: ', film);
                 return save(film);
             }))

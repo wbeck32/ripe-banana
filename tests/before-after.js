@@ -3,10 +3,33 @@ const chai = require('chai');
 const assert = chai.assert;
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
-    const request = chai.request(app);
+const request = chai.request(app);
 
+module.exports = {
+    studio: {
+        name: 'Studio Fantastico',
+        address: {
+            city: 'Krakow',
+            state: '',
+            country: 'Poland'
+        }
+    },
 
-function saveReviewer(reviewer) {
+    saveStudio(studio) {
+        console.log('saveStudio: ', studio);
+        return request.post('/studios')
+            .send(studio)
+            .then(({ body }) => {
+                return Promise((resolve, reject) => {
+                    studio._id = body._id;
+                    studio.__v = body.__v;
+                    return body;
+                })
+            })
+    },
+
+    saveReviewer(reviewer) {
+        console.log('reviewer: ', reviewer);
         return request.post('/reviewers')
             .send(reviewer)
             .then(({ body }) => {
@@ -14,8 +37,21 @@ function saveReviewer(reviewer) {
                 reviewer.__v = body.__v;
                 return body;
             });
-    }
-    function saveActor(actor) {
+    },
+
+    saveReview(review) {
+        console.log('review: ', review);
+        return request.post('/reviews')
+            .send(review)
+            .then(({ body }) => {
+                review._id = body._id;
+                review.__v = body.__v;
+                return body;
+            });
+    },
+
+    saveActor(actor) {
+        console.log('actor: ', actor)
         return request.post('/actors')
             .send(actor)
             .then(({ body }) => {
@@ -23,28 +59,19 @@ function saveReviewer(reviewer) {
                 actor.__v = body.__v;
                 return body;
             });
-    }
+    },
 
-    function saveStudio(studio) {
-        return request.post('/studios')
-            .send(studio)
-            .then(({ body }) => {
-                studio._id = body._id;
-                studio.__v = body.__v;
-                return body;
-            });
-    }
-
-    function saveFilm(film) {
+    saveFilm(film) {
+        console.log('film: ', film)
         return request.post('/films')
             .send(film)
             .then(({ body }) => {
                 film._id = body._id;
                 film.__v = body.__v;
+                film.cast = body.cast;
+                film.studio = body.studio;
+                film.reviews = body.reviews;
                 return body;
             });
     }
-
-    module.exports = {
-        saveReviewer, saveActor, saveStudio, saveFilm
-    };
+}
