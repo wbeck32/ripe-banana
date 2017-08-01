@@ -10,7 +10,7 @@ require('../../lib/connect');
 const connection = require('mongoose')
     .connection;
 
-describe.only('film e2e tests', () => {
+describe('film e2e tests', () => {
     const req = chai.request(app);
 
     let testStudio = testHelper.studio;
