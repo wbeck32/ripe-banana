@@ -169,15 +169,27 @@ describe.only('actor e2e tests', () => {
     });
 
     it.skip('gets all actors with count of films', () => {
+
+        const actorsResponse = [
+            { name: 'Bruce Lee', movieCount: 3 },
+            { name: 'John Saxon', movieCount: 1 },
+            { name: 'Jim Kelly', movieCount: 1 },
+            { name: 'Nora Miao', movieCount: 2 },
+            { name: 'Riki Hashimoto', movieCount: 1 },
+            { name: 'Robert Baker', movieCount: 1 },
+            { name: 'Paul Wei', movieCount: 1 }
+        ];
         
         //TODO: get count of films
+
         return request.get('/actors')
             .then(res => {
-                assert.equal(res.body.length, 7);
+                console.log(res.body);
+                assert.deepEqual(res.body, actorsResponse);
             });
     });
 
-    it.only('gets an actor by id with list of their films', () => {
+    it('gets an actor by id with list of their films', () => {
         return request.get(`/actors/${bruce._id}`)
             .then(res => {
                 assert.equal(res.body.name, bruce.name);
