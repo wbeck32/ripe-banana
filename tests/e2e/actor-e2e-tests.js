@@ -11,7 +11,7 @@ const connection = require('mongoose').connection;
 const app = require('../../lib/app');
 const request = chai.request(app);
 
-describe.only('actor e2e tests', () => {
+describe.skip('actor e2e tests', () => {
 
     before(() => connection.dropDatabase());
 
@@ -121,7 +121,7 @@ describe.only('actor e2e tests', () => {
                     role: 'Petrov',
                     actor: actors.robert._id
                 }
-            ] 
+            ]
         }
     };
 
@@ -189,14 +189,14 @@ describe.only('actor e2e tests', () => {
 
             .then(saveStudio(studios.warner)).then(saved => studios.warner = saved)
             .then(saveFilm(films.dragon2)).then(saved => films.dragon2 = saved)
-        
+
             .then(saveStudio(studios.golden)).then(saved => studios.golden = saved)
             .then(saveFilm(films.dragon1)).then(saved => films.dragon1 = saved)
             .then(saveFilm(films.fury)).then(saved => films.fury = saved);
 
             // console.log('actors>>>>>>>>', actors);
     });
-    
+
     it('saves an actor', () => {
         let jackie = {
             name: 'Jackie Chan',
