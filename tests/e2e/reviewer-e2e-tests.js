@@ -13,7 +13,7 @@ const app = require('../../lib/app');
 
 const request = chai.request(app);
 
-describe.only('reviewer REST api', () => {
+describe('reviewer REST api', () => {
 
     const testStudio = {
         name: 'Studio Fantastico',
@@ -216,7 +216,6 @@ describe.only('reviewer REST api', () => {
 
     it('gets a reviewer by id', () => {
         return request.get(`/reviewers/${ebert._id}`)
-
         .then( res => {
             let gotReviewer = res.body;
             assert.equal(gotReviewer._id, ebert._id);
