@@ -3,12 +3,9 @@ const chai = require('chai');
 const assert = chai.assert;
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
-const testHelper = require('../before-after');
+const testHelper = require('../helpers/test-helper');
 
-process.env.MONGODB_URI = 'mongodb://localhost:27017/ripe-banana-test';
-require('../../lib/connect');
-const connection = require('mongoose')
-    .connection;
+
 
 describe('film e2e tests', () => {
     const req = chai.request(app);
@@ -20,51 +17,24 @@ describe('film e2e tests', () => {
     let testReviewer = testHelper.reviewer;
 
     before(() => {
-        connection
-        connection.dropDatabase();
-
-        return Promise.all([
-                testHelper.saveStudio(testStudio)
-                .then(studio => testStudio = studio),
-                testHelper.saveActor(testActor)
-                .then(actor => testActor = actor)
-            ])
-            .then(() => {
-                testFilm.cast[0].actor = testActor._id;
-                testFilm.studio = testStudio._id;
-                return testHelper.saveFilm(testFilm)
-            })
-            .then(film => {
-                testFilm = film;
-                return testFilm;
-            })
-            .then(() => {
-                return testHelper.saveReviewer(testReviewer)
-
-            })
-            .then(reviewer => testReviewer = reviewer)
-
-            .then(() => {
-                testReview.reviewer = testReviewer;
-                testReview.film = testFilm._id;
-                testHelper.saveReview(testReview)
-                    .then(review => testReview = review)
-            })
 
     });
 
 
-    it.skip('POST /film', () => {
-        // console.log('---- IN TEST ----');
-        // console.log('testStudio: ', testStudio);
-        // console.log('testActor: ', testActor);
-        // console.log('testFilm: ', testFilm);
-        // console.log('testReviewer: ', testReviewer);
-        // console.log('testReview: ', testReview);
-        return req.post(testFilm, () => {})
-        .then(res, () => {
-            console.log(res);
-        })
+    it('POST /film', () => {
+                console.log('---- IN TEST ----');
+        console.log('testStudio: ', testStudio);
+        console.log('testActor: ', testActor);
+        console.log('testFilm: ', testFilm);
+        console.log('testReviewer: ', testReviewer);
+        console.log('testReview: ', testReview);
+
+
+        // return req.post('/films')
+        //     .send(testFilm)
+        //     .then(savedFilm => {
+        //         console.log(savedFilm);
+        //     });
     });
     // , it('GET /films', () => {
     //     // TODO: don't create consts as objects
