@@ -27,7 +27,7 @@ describe.only('actor e2e tests', () => {
             country: 'United States'
         }
     });
-    
+
     let golden = new Studio ({
         name: 'Orange Sky Golden Harvest',
         address: {
@@ -43,7 +43,7 @@ describe.only('actor e2e tests', () => {
         pob: 'San Francisco, California, U.S.'
     });
 
-        
+
     let john = new Actor ({
         name: 'John Saxon',
         dob: new Date(1935, 7, 5),
@@ -71,7 +71,7 @@ describe.only('actor e2e tests', () => {
         dob: new Date(1929, 10, 29),
         pob: 'Nanjing, China'
     });
-    
+
     let dragon1 = new Film ({
         title: 'Way of the Dragon',
         studio: golden._id,
@@ -93,7 +93,7 @@ describe.only('actor e2e tests', () => {
             { role: 'Williams', actor: jim._id }
         ]
     });
-    
+
     let fury = new Film ({
         title: 'Fist of Fury',
         studio: golden._id,
@@ -151,7 +151,7 @@ describe.only('actor e2e tests', () => {
             .then(saveFilm(fury));
 
     });
-    
+
     it('saves an actor', () => {
         let jackie = {
             name: 'Jackie Chan',
