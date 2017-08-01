@@ -7,7 +7,7 @@ const testHelper = require('../helpers/test-helper');
 
 
 
-describe.only('film e2e tests', () => {
+describe('film e2e tests', () => {
     const req = chai.request(app);
 
     let testStudio = testHelper.studio;
