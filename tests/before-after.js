@@ -3,48 +3,98 @@ const chai = require('chai');
 const assert = chai.assert;
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
-    const request = chai.request(app);
+const request = chai.request(app);
 
+module.exports = {
 
-function saveReviewer(reviewer) {
-        return request.post('/reviewers')
-            .send(reviewer)
-            .then(({ body }) => {
-                reviewer._id = body._id;
-                reviewer.__v = body.__v;
-                return body;
-            });
-    }
-    function saveActor(actor) {
-        return request.post('/actors')
-            .send(actor)
-            .then(({ body }) => {
-                actor._id = body._id;
-                actor.__v = body.__v;
-                return body;
-            });
-    }
+    actor: {
+        name: 'Noodly McNoodleface',
+        dob: new Date('1987', '11', '11'),
+        pob: 'Exeter, New Hampshire'
+    },
 
-    function saveStudio(studio) {
+    studio: {
+        name: 'Studio Fantastico',
+        address: {
+            city: 'Krakow',
+            state: '',
+            country: 'Poland'
+        }
+    },
+
+    review: {
+        rating: 5,
+        reviewer: null,
+        review: "I love a parade!",
+        film: null
+    },
+
+    reviewer: {
+        name: 'Mr. Crankypants',
+        company: 'New York Times'
+    },
+
+    film: {
+        title: 'The Greatest Film Ever',
+        studio: null,
+        released: 1997,
+        cast: [{
+            actor: null,
+            role: "Mayor of Magnificence"
+        }]
+    },
+
+    saveStudio(testStudio) {
+        // console.log('saveStudio: ', testStudio);
         return request.post('/studios')
-            .send(studio)
+            .send(testStudio)
             .then(({ body }) => {
-                studio._id = body._id;
-                studio.__v = body.__v;
-                return body;
+                testStudio._id = body._id;
+                testStudio.__v = body.__v;
+                return testStudio;
+            })
+    },
+    saveActor(testActor) {
+        // console.log('saveActor: ', testActor)
+        return request.post('/actors')
+            .send(testActor)
+            .then(({ body }) => {
+                testActor._id = body._id;
+                testActor.__v = body.__v;
+                return testActor;
             });
-    }
-
-    function saveFilm(film) {
+    },
+    saveFilm(testFilm) {
+        // console.log('saveFilm: ', testFilm)
         return request.post('/films')
-            .send(film)
+            .send(testFilm)
             .then(({ body }) => {
-                film._id = body._id;
-                film.__v = body.__v;
-                return body;
+                testFilm._id = body._id;
+                testFilm.__v = body.__v;
+                return testFilm;
+            });
+    },
+
+    saveReviewer(testReviewer) {
+        // console.log('saveReviewer: ', testReviewer);
+        return request.post('/reviewers')
+            .send(testReviewer)
+            .then(({ body }) => {
+                testReviewer._id = body._id;
+                testReviewer.__v = body.__v;
+                return testReviewer;
+            });
+    },
+
+    saveReview(testReview) {
+        // console.log('saveReview: ', testReview);
+        return request.post('/reviews')
+            .send(testReview)
+            .then(({ body }) => {
+                testReview._id = body._id;
+                testReview.__v = body.__v;
+                return testReview;
             });
     }
 
-    module.exports = {
-        saveReviewer, saveActor, saveStudio, saveFilm
-    };
+}
