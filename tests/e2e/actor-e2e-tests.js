@@ -15,7 +15,7 @@ const Studio = require('../../lib/models/studio-model');
 const Actor = require('../../lib/models/actor-model');
 const Film = require('../../lib/models/film-model');
 
-describe('actor e2e tests', () => {
+describe.only('actor e2e tests', () => {
 
     before(() => connection.dropDatabase());
 
@@ -168,19 +168,18 @@ describe('actor e2e tests', () => {
             });
     });
 
-    it('gets all actors with count of films', () => {
+    it.skip('gets all actors with count of films', () => {
         
-    //TODO: get count of films
+        //TODO: get count of films
         return request.get('/actors')
             .then(res => {
-                assert.equal(res.body.length, 8);
+                assert.equal(res.body.length, 7);
             });
     });
 
-    it.skip('gets an actor by id with list of their films', () => {
+    it.only('gets an actor by id with list of their films', () => {
         return request.get(`/actors/${bruce._id}`)
             .then(res => {
-                console.log(res.body);
                 assert.equal(res.body.name, bruce.name);
                 // assert.equal(res.body.dob, bruce.dob); //QUESTION: why can't I compare dates?
                 assert.equal(res.body.pob, bruce.pob);
@@ -188,7 +187,7 @@ describe('actor e2e tests', () => {
             });
     });
 
-    it.only('removes an actor that is not in a film', () => {
+    it('removes an actor that is NOT in a film', () => {
         let chuck = { name: 'Chuck Norris' };
 
         return saveActor(chuck)
@@ -200,7 +199,7 @@ describe('actor e2e tests', () => {
             });
     });
 
-    it.only('does not remove an actor that is in a film', () => {
+    it('does NOT remove an actor that is in a film', () => {
         return request.delete(`/actors/${bruce._id}`)
             .then(res => res.body)
             .then(result => {
