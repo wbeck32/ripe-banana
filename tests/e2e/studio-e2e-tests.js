@@ -172,14 +172,14 @@ describe.only('studio REST api', () => {
             });
     });
 
-    it('deletes a studio only if it has no films', () => {
+    it.skip('deletes a studio only if it has no films', () => {
         return request.delete(`/studios/${testStudio2._id}`)
             .then(res => {
                 assert.deepEqual(res.body, { removed: true });
             });
     });
 
-    it('errors out if delete req for studio with films', () => {
+    it.skip('errors out if delete req for studio with films', () => {
         return request.delete(`/studios/${testStudio._id}`)
             .then(res => {
                 assert.deepEqual(res.body, { removed: false });
