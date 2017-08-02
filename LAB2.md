@@ -8,6 +8,8 @@ This is an optional assignment to use the aggregation pipeline feature of mongod
 
 ## Route Enhancements
 
+route | data
+---|---
 `GET /films` | [{ title, released, studio.name, averageRating }]
 `GET /films/top` | [{ title, released, studio.name, averageRating }] * top 10 sorted by highest rating
 `GET /actors` | [{ name, movieCount }]
