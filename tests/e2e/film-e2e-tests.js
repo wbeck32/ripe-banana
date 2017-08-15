@@ -4,9 +4,8 @@ const assert = chai.assert;
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 const testHelper = require('../helpers/test-helper');
-const db = require('../helpers/db');
 
-describe.only('film e2e tests', () => {
+describe('film e2e tests', () => {
     const req = chai.request(app);
 
     let testStudio = testHelper.studio;
@@ -22,67 +21,67 @@ describe.only('film e2e tests', () => {
     });
 
     it('POST /film', () => {
-            testFilm.studio = testStudio;
-            return req.post('/films')
-                .send(testFilm)
-                .then(savedFilm => {
-                    // console.log('saved film: ', savedFilm.body)
-                    // assert
-                });
-        }),
-        it('GET /films', () => {
-            return req.get('/films')
-                .then(films => {
-                    // console.log('films: ', films.body);
-                    // assert
-                });
-        }),
-        it('GET /film by id', () => {
-            return req.post('/films')
-                .send(testFilm)
-                .then(savedFilm => {
-                    // console.log('savedFilm: ', savedFilm.body)
-                    return savedFilm.body._id
-                })
-                .then(savedId => {
-                    return req.get('/films')
-                        .query({ id: savedId })
-                        .then(res => {
-                            // console.log('res: ', res.body);
+        testFilm.studio = testStudio;
+        return req.post('/films')
+            .send(testFilm)
+            .then(savedFilm => {
+                console.log('saved film: ', savedFilm.body)
+                // assert
+            });
+    }),
+    it('GET /films', () => {
+        return req.get('/films')
+            .then(films => {
+                console.log('films: ', films.body);
+                // assert
+            });
+    }),
+    it('GET /film by id', () => {
+        return req.post('/films')
+            .send(testFilm)
+            .then(savedFilm => {
+                // console.log('savedFilm: ', savedFilm.body)
+                return savedFilm.body._id
+            })
+            .then(savedId => {
+                return req.get('/films')
+                    .query({ id: savedId })
+                    .then(res => {
+                        console.log('res: ', res.body);
 
-                        })
+                    })
 
-                });
+            });
 
-        }),
-        it('DELETE /films by id', () => {
-            return req.post('/films')
-                .send(testFilm)
-                .then(savedFilm => {
-                    // console.log('savedFilm: ', savedFilm.body)
-                    return savedFilm.body._id
-                })
-                .then(savedId => {
-                    return req.delete('/films')
-                        .query({ id: savedId })
-                        .then(res => {
-                            assert.equal(res.status, 200);
+    }),
+    it('DELETE /films by id', () => {
+        return req.post('/films')
+            .send(testFilm)
+            .then(savedFilm => {
+                // console.log('savedFilm: ', savedFilm.body)
+                return savedFilm.body._id
+            })
+            .then(savedId => {
+                return req.delete('/films')
+                    .query({ id: savedId })
+                    .then(res => {
+                        assert.equal(res.status, 200);
 
-                        })
+                    })
 
-                });
-        }),
-        it('PATCH /films', () => {
-            return req.post('/films')
-                .send(testFilm)
-                .then(savedFilm => {
-                    // console.log(savedFilm)
-                    return req.patch('/films')
-                        .send({ id: savedFilm._id, newTitle: 'The Worst Film Ever' })
-                        .then(res => {
-                            assert.equal(res.statusCode, 200);
+            });
+    }),
+    it('PATCH /films', () => {
+        return req.post('/films')
+            .send(testFilm)
+            .then(savedFilm => {
+                // console.log(savedFilm)
+                return req.patch('/films')
+                    .send({ id: savedFilm._id, newTitle: 'The Worst Film Ever' })
+                    .then(res => {
+                        assert.equal(res.statusCode, 200);
 
-                        });
-                });
-        });
+                    });
+            });
+    });
 });
