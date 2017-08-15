@@ -39,7 +39,7 @@ module.exports = {
         released: 1997,
         cast: [{
             actor: null,
-            role: "Mayor of Magnificence"
+            role: 'Mayor of Magnetics'
         }]
     },
 
@@ -92,6 +92,7 @@ module.exports = {
             .then(({ body }) => {
                 testReview._id = body._id;
                 testReview.__v = body.__v;
+                console.log('TEST REVIEW: ', testReview);
                 return testReview;
             });
     }
