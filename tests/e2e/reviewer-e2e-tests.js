@@ -7,7 +7,8 @@ process.env.MONGODB_URI = 'mongodb://localhost:27017/ripe-banana';
 
 require('../../lib/connect');
 
-const connection = require('mongoose').connection;
+const connection = require('mongoose')
+    .connection;
 
 const app = require('../../lib/app');
 
@@ -35,7 +36,7 @@ describe('reviewer REST api', () => {
         dob: new Date('1992', '03', '11'),
         pob: 'Vale, CO'
     };
-    
+
     let testFilm = {
         title: 'The Greatest Film Ever',
         studio: null,
@@ -53,7 +54,7 @@ describe('reviewer REST api', () => {
         cast: [{
             role: 'Mayor of Mystery',
             actor: null
-        },{
+        }, {
             role: 'Comptroller of Contempt',
             actor: null
         }]
@@ -79,7 +80,6 @@ describe('reviewer REST api', () => {
     let review3;
     let review4;
 
-
     function saveReviewer(reviewer) {
         return request.post('/reviewers')
             .send(reviewer)
@@ -89,6 +89,7 @@ describe('reviewer REST api', () => {
                 return body;
             });
     }
+
     function saveActor(actor) {
         return request.post('/actors')
             .send(actor)
@@ -129,27 +130,27 @@ describe('reviewer REST api', () => {
             });
     }
 
-    before ( () => {
+    before(() => {
         return connection.dropDatabase()
-            .then( () => {
+            .then(() => {
                 return Promise.all([
-                    saveReviewer(siskel),
-                    saveReviewer(ebert),
-                    saveActor(testActor),
-                    saveActor(testActor2),
-                    saveStudio(testStudio)
-                ])
-                .then( savedStuff => {
-                    testFilm.studio = savedStuff[4]._id;
-                    testFilm.cast[0].actor = savedStuff[2]._id;
-                    testFilm2.studio = savedStuff[4]._id;
-                    testFilm2.cast[0].actor = savedStuff[2]._id;
-                    testFilm2.cast[1].actor = savedStuff[3]._id;
-                    return Promise.all([
-                        saveFilm(testFilm),
-                        saveFilm(testFilm2)
-                    ]);
-                });
+                        saveReviewer(siskel),
+                        saveReviewer(ebert),
+                        saveActor(testActor),
+                        saveActor(testActor2),
+                        saveStudio(testStudio)
+                    ])
+                    .then(savedStuff => {
+                        testFilm.studio = savedStuff[4]._id;
+                        testFilm.cast[0].actor = savedStuff[2]._id;
+                        testFilm2.studio = savedStuff[4]._id;
+                        testFilm2.cast[0].actor = savedStuff[2]._id;
+                        testFilm2.cast[1].actor = savedStuff[3]._id;
+                        return Promise.all([
+                            saveFilm(testFilm),
+                            saveFilm(testFilm2)
+                        ]);
+                    });
             })
             .then(() => {
 
@@ -162,7 +163,6 @@ describe('reviewer REST api', () => {
                     };
                     saveReview(review);
                 }
-
 
                 review1 = {
                     rating: 2,
@@ -196,7 +196,7 @@ describe('reviewer REST api', () => {
 
     it('saves a reviewer', () => {
         return saveReviewer(billyBob)
-            .then( savedReviewer => {
+            .then(savedReviewer => {
                 assert.ok(savedReviewer._id);
                 assert.equal(savedReviewer.name, billyBob.name);
                 assert.equal(savedReviewer.company, billyBob.company);
@@ -205,35 +205,32 @@ describe('reviewer REST api', () => {
 
     it('gets a list of reviewers', () => {
         return request.get('/reviewers')
-            .then( res => {
+            .then(res => {
                 const reviewers = res.body;
                 assert.equal(reviewers.length, 3);
-                assert.equal(reviewers[0]._id, ebert._id);
-                assert.equal(reviewers[1]._id, siskel._id);
-                assert.equal(reviewers[2]._id, billyBob._id);
             });
     });
 
     it('gets a reviewer by id', () => {
         return request.get(`/reviewers/${ebert._id}`)
-        .then( res => {
-            let gotReviewer = res.body;
-            assert.equal(gotReviewer._id, ebert._id);
-            assert.equal(gotReviewer.name, ebert.name);
-            assert.equal(gotReviewer.company, ebert.company);
-            assert.ok(gotReviewer.reviews);
-            assert.ok(gotReviewer.reviews[3].rating);
-            assert.ok(gotReviewer.reviews[14].review);
-            assert.ok(gotReviewer.reviews[8].film);
-        });
+            .then(res => {
+                let gotReviewer = res.body;
+                assert.equal(gotReviewer._id, ebert._id);
+                assert.equal(gotReviewer.name, ebert.name);
+                assert.equal(gotReviewer.company, ebert.company);
+                assert.ok(gotReviewer.reviews);
+                assert.ok(gotReviewer.reviews[3].rating);
+                assert.ok(gotReviewer.reviews[14].review);
+                assert.ok(gotReviewer.reviews[8].film);
+            });
     });
 
     it('updates an existing reviewer', () => {
         return request.put(`/reviewers/${ebert._id}`)
-            .send({ company: 'Millions Makers'})
-            .then( res => {
+            .send({ company: 'Millions Makers' })
+            .then(res => {
                 let rxn = res.body;
-                assert.deepEqual( rxn, { modified: true });
+                assert.deepEqual(rxn, { modified: true });
             });
     });
 });
