@@ -87,15 +87,17 @@ For this assignment, you'l be creating a database of movie films (with reviews),
 
 #### GET
 
+While the schemas should look like the data definitions above, these are descriptions of the data that should be returned from the various `GET` methods. You will need to use `lean`, `populate`, `select` and combining data to shape the appropriate response. 
+
 route | returns
 ---|---
 `GET /studios` | [ { name } ]
 `GET /studios/:id` | { name, address, films: [{ title }] }
 `GET /films` | [{ title, released, studio.name }]
 `GET /films/:id` | { title, released, studio.name, cast: [ { role, actor-name } ], reviews: [rating, review, reviewer.name] }
-`GET /actors` | [{ name, movieCount }]
-`GET /actors/:id` | { name, dob, pob, films: [ name, released ] }
-`GET /reviewer` | [{ name, company, countOfReviews }]
+`GET /actors` | [{ name }]
+`GET /actors/:id` | { name, dob, pob, films: [ title, released ] }
+`GET /reviewer` | [{ name, company }]
 `GET /reviewer/:id` | { name, company, reviews: [ film.name, rating, review ] }
 `GET /reviews` | [{ rating, review, film.name }] *limit to 100 most recent
 
