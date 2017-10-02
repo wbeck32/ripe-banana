@@ -5,7 +5,7 @@ const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 const testHelper = require('../helpers/test-helper');
 
-describe('film e2e tests', () => {
+describe.only('film e2e tests', () => {
     const req = chai.request(app);
 
     let testStudio = testHelper.studio;
@@ -14,19 +14,13 @@ describe('film e2e tests', () => {
     // let testReview = testHelper.review;
     // let testReviewer = testHelper.reviewer;
 
-    before(() => {
-        //function to save multiple films
-        //function to save multiple reviews
-        // function to save multiple actors
-    });
-
     it('POST /film', () => {
         testFilm.studio = testStudio;
         return req.post('/films')
             .send(testFilm)
             .then(savedFilm => {
-                console.log('saved film: ', savedFilm.body)
-                // assert
+                // console.log('saved film: ', savedFilm.body)
+                assert.equal(savedFilm.body.title, 'The Greatest Film Ever');
             });
     }),
     it('GET /films', () => {
@@ -36,19 +30,19 @@ describe('film e2e tests', () => {
                 // assert
             });
     }),
-    it('GET /film by id', () => {
+    it.only('GET /film by id', () => {
         return req.post('/films')
             .send(testFilm)
             .then(savedFilm => {
-                // console.log('savedFilm: ', savedFilm.body)
                 return savedFilm.body._id
             })
             .then(savedId => {
                 return req.get('/films')
                     .query({ id: savedId })
                     .then(res => {
-                        console.log('res: ', res.body);
-
+                        console.log(res.body);
+                        assert.equal(res.body.length, 1);
+                        assert.equal(res.body[0]._id, savedId);
                     })
 
             });
@@ -79,6 +73,7 @@ describe('film e2e tests', () => {
                 return req.patch('/films')
                     .send({ id: savedFilm._id, newTitle: 'The Worst Film Ever' })
                     .then(res => {
+                        console.log('res: ',res)
                         assert.equal(res.statusCode, 200);
 
                     });
