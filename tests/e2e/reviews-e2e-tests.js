@@ -3,7 +3,7 @@ const assert = chai.assert;
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
-process.env.MONGODB_URI = 'mongodb://localhost:27017/ripe-banana';
+process.env.MONGODB_URI = 'mongodb://localhost:27017/ripe-banana-aggregation';
 
 require('../../lib/connect');
 
@@ -35,7 +35,7 @@ describe('reviews REST API', () => {
         dob: new Date('1992', '03', '11'),
         pob: 'Vale, CO'
     };
-    
+
     let testFilm = {
         title: 'The Greatest Film Ever',
         studio: null,
@@ -125,8 +125,8 @@ describe('reviews REST API', () => {
     }
 
     before ( () => {
-        return connection.dropDatabase()
-            .then( () => {
+        // return connection.dropDatabase()
+        //     .then( () => {
                 return Promise.all([
                     saveReviewer(siskel),
                     saveReviewer(ebert),
@@ -144,8 +144,8 @@ describe('reviews REST API', () => {
                         saveFilm(testFilm),
                         saveFilm(testFilm2)
                     ]);
-                });
-            })
+                })
+
             .then(() => {
 
                 for (let i = 0; i < 103; i++) {
@@ -157,8 +157,8 @@ describe('reviews REST API', () => {
                     };
                     saveReview(review);
                 }
-
-
+            })
+        })
                 review1 = {
                     rating: 2,
                     reviewer: siskel._id,
@@ -187,7 +187,7 @@ describe('reviews REST API', () => {
                     film: testFilm2._id
                 };
             });
-    });
+
 
     it('saves a review', () => {
         return saveReview(review1)
@@ -226,4 +226,3 @@ describe('reviews REST API', () => {
         });
     });
 
-});

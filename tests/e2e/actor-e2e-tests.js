@@ -3,7 +3,7 @@ const assert = chai.assert;
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
-process.env.MONGODB_URI = 'mongodb://localhost:27017/ripe-banana-test';
+process.env.MONGODB_URI = 'mongodb://localhost:27017/ripe-banana-aggregation';
 require('../../lib/connect');
 
 const connection = require('mongoose').connection;
@@ -17,7 +17,7 @@ const Film = require('../../lib/models/film-model');
 
 describe('actor e2e tests', () => {
 
-    before(() => connection.dropDatabase());
+    // before(() => connection.dropDatabase());
 
     let warner = new Studio ({
         name: 'Warner Bros. Entertainment Inc.',

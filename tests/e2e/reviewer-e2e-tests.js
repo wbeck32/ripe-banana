@@ -3,7 +3,7 @@ const assert = chai.assert;
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
-process.env.MONGODB_URI = 'mongodb://localhost:27017/ripe-banana';
+process.env.MONGODB_URI = 'mongodb://localhost:27017/ripe-banana-aggregation';
 
 require('../../lib/connect');
 
@@ -35,7 +35,7 @@ describe('reviewer REST api', () => {
         dob: new Date('1992', '03', '11'),
         pob: 'Vale, CO'
     };
-    
+
     let testFilm = {
         title: 'The Greatest Film Ever',
         studio: null,
@@ -130,8 +130,8 @@ describe('reviewer REST api', () => {
     }
 
     before ( () => {
-        return connection.dropDatabase()
-            .then( () => {
+        // return connection.dropDatabase()
+            // .then( () => {
                 return Promise.all([
                     saveReviewer(siskel),
                     saveReviewer(ebert),
@@ -149,7 +149,7 @@ describe('reviewer REST api', () => {
                         saveFilm(testFilm),
                         saveFilm(testFilm2)
                     ]);
-                });
+
             })
             .then(() => {
 
