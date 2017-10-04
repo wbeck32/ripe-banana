@@ -30,7 +30,6 @@ module.exports = {
       country: 'Poland'
     }
   },
-
   actorBruce: {
     name: 'Bruce Lee',
     dob: new Date(1940, 10, 27),
@@ -65,106 +64,24 @@ module.exports = {
     dob: new Date('1987', '11', '11'),
     pob: 'Exeter, New Hampshire'
   },
-
-  // filmDragon1: {
-  //   title: 'Way of the Dragon',
-  //   studio: studioGolden._id,
-  //   released: 1972,
-  //   cast: [
-  //     { role: 'Tang Lung', actor: actorBruce._id },
-  //     { role: 'Chen Ching-hua', actor: actorNora._id },
-  //     { role: 'Ho', actor: actorPaul._id }
-  //   ]
-  // },
-
-  // filmDragon2: {
-  //   title: 'Enter the Dragon',
-  //   studio: studioWarner._id,
-  //   released: 1973,
-  //   cast: [
-  //     { role: 'Lee', actor: actorBruce._id },
-  //     { role: 'Roper', actor: actorJohn._id },
-  //     { role: 'Williams', actor: actorJim._id }
-  //   ]
-  // },
-
-  // filmFury: {
-  //   title: 'Fist of Fury',
-  //   studio: studioGolden._id,
-  //   released: 1972,
-  //   cast: [
-  //     { role: 'Chen Zhen', actor: actorBruce._id },
-  //     { role: "Yuan Li'er", actor: actorNora._id }
-  //   ]
-  // },
-  // filmGreat: {
-  //   title: 'The Greatest Film Ever',
-  //   studio: null,
-  //   released: 1997,
-  //   cast: [
-  //     {
-  //       actor: null,
-  //       role: 'Mayor of Magnificence'
-  //     }
-  //   ]
-  // },
-
-  // reviewerCranky: {
-  //   name: 'Mr. Crankypants',
-  //   company: 'New York Times'
-  // },
-
-  // reviewerSiskel: {
-  //   name: 'Siskel',
-  //   company: 'filmflappers.net'
-  // },
-
-  // reviewerEbert: {
-  //   name: 'Ebert',
-  //   company: 'cinemanima.world'
-  // },
-
-  // reviewerBob: {
-  //   name: 'Billy Bobawful',
-  //   company: 'TCM'
-  // },
-  // review0: {
-  //   rating: 5,
-  //   reviewer: reviewerEbert._id,
-  //   review: 'I love a parade!',
-  //   film: filmDragon2._id
-  // },
-
-  // review1: {
-  //   rating: 2,
-  //   reviewer: reviewerSiskel._id,
-  //   review: 'this movie stinks',
-  //   film: filmDragon1._id
-  // },
-
-  // review2: {
-  //   rating: 5,
-  //   reviewer: reviewerBob._id,
-  //   review: 'this movie was great!',
-  //   film: filmFury._id
-  // },
-
-  // review3: {
-  //   rating: 1,
-  //   reviewer: reviewerEbert._id,
-  //   review: "I wouldn't let my dog chew on the DVD",
-  //   film: filmDragon1._id
-  // },
-
-  // review4: {
-  //   rating: 4,
-  //   review: "I'd let my dog chew on the DVD",
-  //   reviewer: reviewerBob._id,
-  //   film: filmDragon1._id
-  // },
+  reviewerCranky: {
+    name: 'Mr. Crankypants',
+    company: 'New York Times'
+  },
+  reviewerSiskel: {
+    name: 'Siskel',
+    company: 'filmflappers.net'
+  },
+  reviewerEbert: {
+    name: 'Ebert',
+    company: 'cinemanima.world'
+  },
+  reviewerBob: {
+    name: 'Billy Bobawful',
+    company: 'TCM'
+  },
 
   saveStudio(testStudio) {
-    // console.log('saveStudio: ', testStudio);
     return request
       .post('/studios')
       .send(testStudio)
@@ -175,7 +92,6 @@ module.exports = {
       });
   },
   saveActor(testActor) {
-    // console.log('saveActor: ', testActor)
     return request
       .post('/actors')
       .send(testActor)
@@ -186,7 +102,6 @@ module.exports = {
       });
   },
   saveFilm(testFilm) {
-    // console.log('saveFilm: ', testFilm)
     return request
       .post('/films')
       .send(testFilm)
@@ -198,7 +113,6 @@ module.exports = {
   },
 
   saveReviewer(testReviewer) {
-    // console.log('saveReviewer: ', testReviewer);
     return request
       .post('/reviewers')
       .send(testReviewer)
@@ -210,7 +124,6 @@ module.exports = {
   },
 
   saveReview(testReview) {
-    // console.log('saveReview: ', testReview);
     return request
       .post('/reviews')
       .send(testReview)
@@ -220,9 +133,4 @@ module.exports = {
         return testReview;
       });
   }
-
-
-
-
-
 };
