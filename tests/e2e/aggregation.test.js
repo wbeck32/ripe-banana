@@ -9,7 +9,6 @@ const d = require('../helpers/aggregation-data');
 
 describe.only('aggregation e2e tests', () => {
   it('GET /films', async () => {
-    // [{ title, released, studio.name, averageRating }]
     const filmData = await req.get('/aggregation');
     assert.lengthOf(filmData.body, 12);
     assert.sameMembers(
@@ -42,12 +41,10 @@ describe.only('aggregation e2e tests', () => {
     );
   }),
     it('GET /films/top', async () => {
-      // [{ title, released, studio.name, averageRating }] * top 10 sorted by highest rating
       const filmData = await req.get('/aggregation/top');
       assert.lengthOf(filmData.body, 12);
     }),
     it('GET /actors', async () => {
-      // [{ name, movieCount }]
       const actorsAndMovies = await req.get('/aggregation/actors');
       assert.lengthOf(actorsAndMovies.body, 6);
       actorsAndMovies.body.forEach(ele => {
@@ -61,7 +58,18 @@ describe.only('aggregation e2e tests', () => {
       });
     }),
     it('GET reviewer', async () => {
-      // [{ name, company, countOfReviews, averageReview }]
+      const reviewers = await req.get('/aggregation/reviewers');
+      assert.lengthOf(reviewers.body, 4);
+      reviewers.body.forEach(reviewer => {
+        if (reviewer.name === 'Mr. Crankypants')
+          assert.equal(reviewer.averageOfReviews, 3);
+        else if (reviewer.name === 'Billy Bobawful')
+          assert.equal(reviewer.numberOfReviews, 6);
+        else if (reviewer.name === 'Ebert')
+          assert.equal(reviewer.averageOfReviews, 4);
+        else if (reviewer.name === 'Siskel')
+          assert.equal(reviewer.numberOfReviews, 6);
+      });
     });
 });
 
