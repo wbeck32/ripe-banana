@@ -43,6 +43,9 @@ describe.only('aggregation e2e tests', () => {
   }),
     it('GET /films/top', async () => {
       // [{ title, released, studio.name, averageRating }] * top 10 sorted by highest rating
+      const filmData = await req.get('/aggregation/top');
+
+      console.log(33, filmData)
     }),
     it('GET /actors', async () => {
       // [{ name, movieCount }]
