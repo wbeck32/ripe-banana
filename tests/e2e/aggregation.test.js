@@ -44,12 +44,21 @@ describe.only('aggregation e2e tests', () => {
     it('GET /films/top', async () => {
       // [{ title, released, studio.name, averageRating }] * top 10 sorted by highest rating
       const filmData = await req.get('/aggregation/top');
-      assert.lengthOf(filmData.body, 12)
+      assert.lengthOf(filmData.body, 12);
     }),
     it('GET /actors', async () => {
       // [{ name, movieCount }]
-      const actorsAndMovies = await req.get('/aggregation/actors')
-      console.log(33, actorsAndMovies.body)
+      const actorsAndMovies = await req.get('/aggregation/actors');
+      assert.lengthOf(actorsAndMovies.body, 6);
+      actorsAndMovies.body.forEach(ele => {
+        if (ele.name === 'Jim Kelly') assert.equal(ele.numberOfFilms, 3);
+        else if (ele.name === 'John Saxon') assert.equal(ele.numberOfFilms, 4);
+        else if (ele.name === 'Bruce Lee') assert.equal(ele.numberOfFilms, 10);
+        else if (ele.name === 'Nora Miao') assert.equal(ele.numberOfFilms, 10);
+        else if (ele.name === 'Noodly McNoodleface')
+          assert.equal(ele.numberOfFilms, 3);
+        else if (ele.name === 'Paul Wei') assert.equal(ele.numberOfFilms, 4);
+      });
     }),
     it('GET reviewer', async () => {
       // [{ name, company, countOfReviews, averageReview }]
