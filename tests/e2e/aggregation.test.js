@@ -48,6 +48,8 @@ describe.only('aggregation e2e tests', () => {
     }),
     it('GET /actors', async () => {
       // [{ name, movieCount }]
+      const actorsAndMovies = await req.get('/aggregation/actors')
+      console.log(33, actorsAndMovies.body)
     }),
     it('GET reviewer', async () => {
       // [{ name, company, countOfReviews, averageReview }]
